@@ -1,0 +1,33 @@
+﻿<Window x:Class="Sudoku.Client.Main.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:display="clr-namespace:Sudoku.Client.Display"
+        
+        mc:Ignorable="d"
+        Height="400" Width="350">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <display:SudokuView x:Name="Sudoku" DataContext="{Binding Sudoku}" Grid.Row="0" Grid.Column="1" />
+        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3">
+            <Button cal:Message.Attach="GenerateSudoku" Content="Generate" MinWidth="70" Margin="0,0,10,0" />
+            <Button cal:Message.Attach="ClearSudoku" Content="Clear" MinWidth="70" Margin="0,0,10,0" />
+            <Button cal:Message.Attach="SolveSudoku" Content="Solve" MinWidth="70" />
+        </StackPanel>
+    </Grid>
+</Window>
