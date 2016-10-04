@@ -191,7 +191,6 @@ namespace Sudoku.Client.Data
         protected bool hasValidBoxes(bool[,,] possibilities)
         {
             var ret = false;
-            int count = 0;
             
             for (int value = 0; value < 9; value++)
             {
@@ -199,6 +198,8 @@ namespace Sudoku.Client.Data
                 {
                     for (int box_index_column = 0; box_index_column < 3; box_index_column++)
                     {
+                        int count = 0;
+
                         for (int row = box_index_row * 3; row < box_index_row * 3 + 3; row++)
                         {
                             for (int column = box_index_column * 3; column < box_index_column * 3 + 3; column++)
@@ -265,11 +266,7 @@ namespace Sudoku.Client.Data
                 for (int column = 0; column < 9; column++)
                 {
                     int[] possibleValues = getPossibleValues(possibilities, row, column);
-
-                    if (possibleValues.Length == 1)
-                    {
-                        matrix[row, column] = possibleValues[0];
-                    }
+                    matrix[row, column] = (possibleValues?.Length == 1) ? possibleValues[0] : 0;
                 }
             }
 
@@ -304,16 +301,25 @@ namespace Sudoku.Client.Data
         {
             if (possibilities[row, column, value - 1])
             {
-                for (int c = 0; c < 9; c++)
+                // eliminate remaining possibilities of field
+                for (int v = 1; v < 10; v++)
                 {
-                    if (c != column) { possibilities[row, c, value - 1] = false; }
+                    if (v != value) { possibilities[row, column, v - 1] = false; }
                 }
 
+                // eliminate possibilities with same value in row
                 for (int r = 0; r < 9; r++)
                 {
                     if (r != row) { possibilities[r, column, value - 1] = false; }
                 }
 
+                // eliminate possibilities with same value in column
+                for (int c = 0; c < 9; c++)
+                {
+                    if (c != column) { possibilities[row, c, value - 1] = false; }
+                }
+
+                // eliminate possibilities with same value in box
                 for (int r = ((row / 3) * 3); r < ((row / 3) * 3) + 3; r++)
                 {
                     for (int c = ((column / 3) * 3); c < ((column / 3) * 3) + 3; c++)
@@ -332,32 +338,39 @@ namespace Sudoku.Client.Data
         {
             bool[] possibilities = new bool[9];
 
-            for (int val = 0; val < 9; val++)
+            if (matrix[row, column] > 0)
             {
-                bool possible = false;
-
-                for (int c = 0; c < 9; c++)
+                possibilities[matrix[row, column] - 1] = true;
+            }
+            else
+            {
+                for (int val = 1; val < 10; val++)
                 {
-                    if (matrix[row, c] == val + 1) { goto Next; }
-                }
+                    bool possible = false;
 
-                for (int r = 0; r < 9; r++)
-                {
-                    if (matrix[r, column] == val + 1) { goto Next; }
-                }
-
-                for (int i = ((row / 3) * 3); i < ((row / 3) * 3) + 3; i++)
-                {
-                    for (int j = ((column / 3) * 3); j < ((column / 3) * 3) + 3; j++)
+                    for (int c = 0; c < 9; c++)
                     {
-                        if (matrix[i, j] == val + 1) { goto Next; }
+                        if (c != column && matrix[row, c] == val) { goto Next; }
                     }
+
+                    for (int r = 0; r < 9; r++)
+                    {
+                        if (r != row && matrix[r, column] == val) { goto Next; }
+                    }
+
+                    for (int r = ((row / 3) * 3); r < ((row / 3) * 3) + 3; r++)
+                    {
+                        for (int c = ((column / 3) * 3); c < ((column / 3) * 3) + 3; c++)
+                        {
+                            if (r != row && c != column && matrix[r, c] == val) { goto Next; }
+                        }
+                    }
+
+                    possible = true;
+
+                Next:
+                    possibilities[val - 1] = possible;
                 }
-
-                possible = true;
-
-            Next:
-                possibilities[val] = possible;
             }
 
             return possibilities;
@@ -366,11 +379,17 @@ namespace Sudoku.Client.Data
         protected int[] getPossibleValues(bool[] possibilities)
         {
             int i = 0;
-            int[] possibleValues = new int[getPossibilitiesCount(possibilities)];
+            int count = getPossibilitiesCount(possibilities);
+            int[] possibleValues = null;
 
-            for (int val = 1; val < 10; val++)
+            if (count > 0)
             {
-                if (possibilities[val - 1]) { possibleValues[i++] = val; }
+                possibleValues = new int[count];
+
+                for (int val = 1; val < 10; val++)
+                {
+                    if (possibilities[val - 1]) { possibleValues[i++] = val; }
+                }
             }
 
             return possibleValues;
@@ -378,14 +397,18 @@ namespace Sudoku.Client.Data
 
         protected int[] getPossibleValues(bool[,,] possibilities, int row, int column)
         {
-            // TODO: fix overflow exception
-
             int i = 0;
-            int[] possibleValues = new int[getPossibilitiesCount(possibilities, row, column)];
+            int count = getPossibilitiesCount(possibilities, row, column);
+            int[] possibleValues = null;
 
-            for (int val = 1; val < 10; val++)
+            if (count > 0)
             {
-                if (possibilities[row, column, val - 1]) { possibleValues[i++] = val; }
+                possibleValues = new int[count];
+
+                for (int val = 1; val < 10; val++)
+                {
+                    if (possibilities[row, column, val - 1]) { possibleValues[i++] = val; }
+                }
             }
 
             return possibleValues;
@@ -419,7 +442,7 @@ namespace Sudoku.Client.Data
 
         #region Trace
 
-        protected void writeMatrix(int[,] matrix)
+        protected void writeSudoku(int[,] matrix)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -443,6 +466,12 @@ namespace Sudoku.Client.Data
             }
 
             Console.WriteLine("+ ----- + ----- + ----- +");
+        }
+
+        protected void writeSudoku(bool[,,] possibilities)
+        {
+            var matrix = possibilitiesToMatrix(possibilities);
+            writeSudoku(matrix);
         }
 
         #endregion Trace

@@ -16,7 +16,7 @@ namespace Sudoku.Client.Main
         public MainViewModel()
         {
             DisplayName = "Sudoku Solver v1.0";
-            _sudoku.ApplyMatrix(SudokuScoreTempSettings.Matrix);
+            _sudoku.ApplyMatrix(SudokuScoreSettings.Matrix);
         }
 
         #endregion Constructor
@@ -40,30 +40,31 @@ namespace Sudoku.Client.Main
             var generator = new SudokuGenerator();
             var matrix = await Task.Run<int[,]>(() => generator.GenerateSudoku(SudokuDifficutyLevel.Medium));
             _sudoku.ApplyMatrix(matrix);
+            _sudoku.MarkSetFieldsAsFix();
         }
 
         public void ClearSudoku()
         {
             _sudoku.ApplyMatrix(new int[9, 9]);
+            _sudoku.MarkSetFieldsAsFix();
         }
 
         public void SolveSudoku()
         {
+            _sudoku.MarkSetFieldsAsFix();
+
             var matrix = _sudoku.GetMatrix();
             var solver = new SudokuSolver();
+            var solution = solver.SolveSudoku(matrix);
 
-            if (solver.GetFixFieldsCount(matrix) >= 30)
-            {
-                var solution = solver.SolveSudoku(matrix);
-                _sudoku.ApplyMatrix(solution != null ? solution : new int[9, 9]);
-            }
+            _sudoku.ApplyMatrix(solution != null ? solution : new int[9, 9]);
         }
 
         public override void CanClose(Action<bool> callback)
         {
             // save score
-            SudokuScoreTempSettings.Matrix = _sudoku.GetMatrix();
-            SudokuScoreTempSettings.SaveData();
+            SudokuScoreSettings.Matrix = _sudoku.GetMatrix();
+            SudokuScoreSettings.SaveData();
 
             base.CanClose(callback);
         }

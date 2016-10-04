@@ -16,13 +16,17 @@ namespace Sudoku.Client.Data
 
             var matrix = (int[,])original.Clone();
             var possibilities = matrixToPossibilities(matrix);
-            solveSudoku(possibilities);
-            solution = possibilitiesToMatrix(possibilities);
+            solveSudoku(ref possibilities);
+
+            if (possibilities != null)
+            {
+                solution = possibilitiesToMatrix(possibilities);
+            }
 
             return solution;
         }
 
-        private void solveSudoku(bool[,,] possibilities)
+        private void solveSudoku(ref bool[,,] possibilities, int row = 0, int column = 0)
         {
             if (isValidSudoku(possibilities))
             {
@@ -32,31 +36,35 @@ namespace Sudoku.Client.Data
                 }
                 else
                 {
-                    for (int row = 0; row < 9; row++)
+                    for (; row < 9; row++)
                     {
-                        for (int column = 0; column < 9; column++)
+                        for (; column < 9; column++)
                         {
-                            // TODO: 
-
                             var possibleValues = getPossibleValues(possibilities, row, column);
+                            int length = (possibleValues != null) ? possibleValues.Length : 0;
 
-                            switch (possibleValues.Length)
+                            switch (length)
                             {
                                 case 0:
                                     // move one layer down
                                     possibilities = null;
                                     return;
                                 case 1:
-                                    // shrink possibilities
+                                    // shrink possibilities to reduce backtracking paths of algorithm
                                     setValue(possibilities, row, column, possibleValues[0]);
                                     break;
                                 default:
 
                                     for (int i = 0; i < possibleValues.Length; i++)
                                     {
-                                        // move one layer up
+                                        // try out remaining possibilities
                                         var solution = (bool[,,])possibilities.Clone();
-                                        solveSudoku(solution);
+                                        setValue(solution, row, column, possibleValues[i]);
+
+                                        // move one layer up
+                                        int r = column + 1 < 9 ? row : row + 1;
+                                        int c = column + 1 < 9 ? column + 1 : 0;
+                                        solveSudoku(ref solution, r, c);
 
                                         if (solution != null)
                                         {
@@ -64,16 +72,14 @@ namespace Sudoku.Client.Data
                                             possibilities = solution;
                                             return;
                                         }
-                                        else
-                                        {
-                                            // move one layer down
-                                            return;
-                                        }
                                     }
 
+                                    // path has no valid solution. move one layer down.
                                     goto case 0;
                             }
                         }
+
+                        column = 0;
                     }
                 }
             }

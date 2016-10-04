@@ -30,11 +30,7 @@ namespace Sudoku.Client.Data
             while (true)
             {
                 addRandomValue(matrix);
-                
-                if (hasUniqueSolution(matrix))
-                {
-                    break;
-                }
+                if (hasUniqueSolution(matrix)) { break; }
 
                 //writeMatrix(matrix);
                 _solutionCount = 0;
@@ -48,14 +44,8 @@ namespace Sudoku.Client.Data
                 int row = _random.Next(9);
                 int column = _random.Next(9);
 
-                if (matrix[row, column] > 0)
-                {
-                    matrix[row, column] = 0;
-                }
-                else
-                {
-                    columnCount++;
-                }
+                if (matrix[row, column] > 0) { matrix[row, column] = 0; }
+                else { columnCount++; }
             }
 
             return matrix;

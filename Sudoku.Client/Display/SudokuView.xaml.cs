@@ -72,16 +72,16 @@ namespace Sudoku.Client.Display
             switch (e.Key)
             {
                 case Key.Up:
-                    _row = _row > 0 ? _row - 1 : _row;
+                    _row = _row > 0 ? _row - 1 : 8;
                     break;
                 case Key.Down:
-                    _row = _row < 8 ? _row + 1 : _row;
+                    _row = _row < 8 ? _row + 1 : 0;
                     break;
                 case Key.Left:
-                    _column = _column > 0 ? _column - 1 : _column;
+                    _column = _column > 0 ? _column - 1 : 8;
                     break;
                 case Key.Right:
-                    _column = _column < 8 ? _column + 1 : _column;
+                    _column = _column < 8 ? _column + 1 : 0;
                     break;
                 default:
                     return;

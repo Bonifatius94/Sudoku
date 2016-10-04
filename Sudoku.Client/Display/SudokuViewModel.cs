@@ -77,6 +77,24 @@ namespace Sudoku.Client.Display
                 }
             }
         }
+
+        public void MarkSetFieldsAsFix()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        for (int l = 0; l < 3; l++)
+                        {
+                            var field = _boxes[i, j].Fields[k, l];
+                            field.IsFix = !string.IsNullOrEmpty(field.Value);
+                        }
+                    }
+                }
+            }
+        }
         
         #endregion Methods
     }

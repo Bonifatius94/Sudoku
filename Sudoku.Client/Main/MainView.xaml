@@ -21,8 +21,8 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
-        <display:SudokuView x:Name="Sudoku" DataContext="{Binding Sudoku}" Grid.Row="0" Grid.Column="1" />
+
+        <display:SudokuView DataContext="{Binding Sudoku}" Grid.Row="0" Grid.Column="1" />
         
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3">
             <Button cal:Message.Attach="GenerateSudoku" Content="Generate" MinWidth="70" Margin="0,0,10,0" />

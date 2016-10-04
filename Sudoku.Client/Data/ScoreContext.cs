@@ -8,11 +8,11 @@ using System.Xml;
 
 namespace Sudoku.Client.Data
 {
-    public static class SudokuScoreTempSettings
+    public static class SudokuScoreSettings
     {
         #region Constructor
 
-        static SudokuScoreTempSettings()
+        static SudokuScoreSettings()
         {
             LoadData();
         }

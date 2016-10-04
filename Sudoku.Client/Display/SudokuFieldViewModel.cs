@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using System.Windows.Media;
 
 namespace Sudoku.Client.Display
 {
@@ -36,6 +37,20 @@ namespace Sudoku.Client.Display
         }
         
         public int SelectionStart { get { return _value != 0 ? 1 : 0; } }
+
+        private bool _isFix = false;
+        public bool IsFix
+        {
+            get { return _isFix; }
+            set
+            {
+                _isFix = value;
+                NotifyOfPropertyChange(() => IsFix);
+                NotifyOfPropertyChange(() => FontColor);
+            }
+        }
+
+        public Brush FontColor { get { return _isFix ? Brushes.Black : Brushes.Blue; } }
 
         #endregion Members
     }
