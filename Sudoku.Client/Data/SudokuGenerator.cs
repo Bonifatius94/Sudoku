@@ -22,140 +22,234 @@ namespace Sudoku.Client.Data
 
         #region Methods
 
-        public int[,] GenerateSudoku(SudokuDifficutyLevel difficulty)
+        public int[,] GenerateSudoku(SudokuDifficutyLevel difficulty, out int[,] solution)
         {
-            int[,] matrix = new int[9, 9];
             _solutionCount = 0;
+
+            int[,] sudoku;
+            bool[,,] possibilities = new bool[9, 9, 9];
+            
+            // initialize all possibilities with true
+            for (int r = 0; r < 9; r++)
+            {
+                for (int c = 0; c < 9; c++)
+                {
+                    for (int v = 0; v < 9; v++)
+                    {
+                        possibilities[r, c, v] = true;
+                    }
+                }
+            }
 
             while (true)
             {
-                addRandomValue(matrix);
-                if (hasUniqueSolution(matrix)) { break; }
+                addRandomValue(ref possibilities);
+                if (hasUniqueSolution(possibilities)) { break; }
 
-                //writeMatrix(matrix);
+                writeSudoku(possibilities);
                 _solutionCount = 0;
             }
 
-            matrix = new SudokuSolver().SolveSudoku(matrix);
-            int columnCount = 81 - ((int)difficulty);
+            sudoku = possibilitiesToMatrix(possibilities);
+            solution = possibilitiesToMatrix(new SudokuSolver().SolveSudoku(possibilities));
+            int columnsToFill = ((int)difficulty) - GetFixFieldsCount(sudoku);
 
-            while (0 < columnCount--)
+            while (0 < columnsToFill--)
             {
                 int row = _random.Next(9);
                 int column = _random.Next(9);
 
-                if (matrix[row, column] > 0) { matrix[row, column] = 0; }
-                else { columnCount++; }
+                if (sudoku[row, column] == 0) { sudoku[row, column] = solution[row, column]; }
+                else { columnsToFill++; }
             }
 
-            return matrix;
+            return sudoku;
         }
 
-        private void addRandomValue(int[,] matrix)
+        private void addRandomValue(ref bool[,,] possibilities)
         {
             int row;
             int column;
-            
+            bool[,,] temp = null;
+
             do
             {
                 row = _random.Next(9);
                 column = _random.Next(9);
 
-                if (matrix[row, column] == 0) { break; }
+                if (getPossibilitiesCount(possibilities, row, column) > 1)
+                {
+                    int[] possibleValues = null;
+
+                    do
+                    {
+                        possibleValues = getPossibleValues(possibilities, row, column);
+                        int index = _random.Next(possibleValues.Length);
+                        int value = possibleValues[index];
+
+                        temp = (bool[,,])possibilities.Clone();
+                        setValue(temp, row, column, value);
+
+                        if (hasAnySolution(temp)) { goto Leave; }
+                        else { possibilities[row, column, value - 1] = false; }
+                    }
+                    while (possibleValues.Length > 0);
+                }
             }
             while (true);
 
-            var possibilities = getPossibilities(matrix, row, column);
-            int[] possibleValues = null;
-
-            do
-            {
-                possibleValues = getPossibleValues(possibilities);
-                int value = possibleValues[_random.Next(possibleValues.Length)];
-                matrix[row, column] = value;
-                
-                if (isValidSudoku(matrix)) { break; }
-                else { possibilities[value-1] = false; }
-            }
-            while (possibleValues.Length > 0);
+        Leave:
+            possibilities = temp;
         }
         
-        private void applyValue(bool[,,] possibilities, int row, int column, int value)
-        {
-            for (int c = 0; c < 9; c++)
-            {
-                possibilities[row, c, value - 1] = false;
-            }
-            
-            for (int r = 0; r < 9; r++)
-            {
-                possibilities[r, column, value - 1] = false;
-            }
-            
-            for (int i = ((row / 3) * 3); i < ((row / 3) * 3) + 3; i++)
-            {
-                for (int j = ((column / 3) * 3); j < ((column / 3) * 3) + 3; j++)
-                {
-                    possibilities[i, j, value - 1] = false;
-                }
-            }
-        }
-
         private bool hasAnySolution(int[,] matrix)
         {
             var ret = (new SudokuSolver().SolveSudoku(matrix) != null);
             return ret;
         }
 
-        private bool hasUniqueSolution(int[,] original)
+        private bool hasAnySolution(bool[,,] possibilities)
         {
-            bool ret = true;
-            var matrix = (int[,])original.Clone();
+            var ret = (new SudokuSolver().SolveSudoku(possibilities) != null);
+            return ret;
+        }
 
-            for (int i = 0; i < 9; i++)
+        private bool hasUniqueSolution(ref bool[,,] possibilities)
+        {
+            int count = 0;
+            var temp = (bool[,,])possibilities.Clone();
+            getSolutionsCount(ref temp, ref count);
+
+            if (count == 1) { possibilities = temp; }
+
+            return (count == 1);
+        }
+
+        private bool hasUniqueSolution(bool[,,] possibilities)
+        {
+            int count = 0;
+            var temp = (bool[,,])possibilities.Clone();
+            getSolutionsCount(ref temp, ref count);
+            
+            return (count == 1);
+        }
+
+        private void getSolutionsCount(ref bool[,,] possibilities, ref int count, int row = 0, int column = 0)
+        {
+            // info: this method is optimized for use by hasUniqueSolution
+
+            if (isValidSudoku(possibilities))
             {
-                for (int j = 0; j < 9; j++)
+                if (isComplete(possibilities))
                 {
-                    if (matrix[i, j] == 0)
+                    return;
+                }
+                else
+                {
+                    for (; row < 9; row++)
                     {
-                        for (int value = 1; value < 10; value++)
+                        for (; column < 9; column++)
                         {
-                            matrix[i, j] = value;
+                            var possibleValues = getPossibleValues(possibilities, row, column);
+                            int length = (possibleValues != null) ? possibleValues.Length : 0;
 
-                            if (isValidSudoku(matrix))
+                            switch (length)
                             {
-                                if (isComplete(matrix))
-                                {
-                                    // add solution to collection
-                                    _solutionCount++;
-                                    goto Leave;
-                                }
-                                else
-                                {
-                                    // move one layer up
-                                    hasUniqueSolution(matrix);
-                                    
-                                    if (_solutionCount > 1)
+                                case 0:
+                                    // move one layer down
+                                    possibilities = null;
+                                    return;
+                                case 1:
+                                    // shrink possibilities to reduce backtracking paths of algorithm
+                                    setValue(possibilities, row, column, possibleValues[0]);
+                                    break;
+                                default:
+
+                                    for (int i = 0; i < possibleValues.Length; i++)
                                     {
-                                        ret = false;
-                                        goto Leave;
+                                        // try out remaining possibilities
+                                        var solution = (bool[,,])possibilities.Clone();
+                                        setValue(solution, row, column, possibleValues[i]);
+
+                                        // move one layer up
+                                        int r = column + 1 < 9 ? row : row + 1;
+                                        int c = column + 1 < 9 ? column + 1 : 0;
+                                        getSolutionsCount(ref solution, ref count, r, c);
+
+                                        if (solution != null && ++count > 1)
+                                        {
+                                            // second solution found. stop and return count greater than 1.
+                                            return;
+                                        }
                                     }
-                                    
-                                    // reset value
-                                    matrix[i, j] = 0;
-                                }
+
+                                    // path has no valid solution. move one layer down.
+                                    goto case 0;
                             }
                         }
 
-                        // move one layer down
-                        goto Leave;
+                        column = 0;
                     }
                 }
-            }
 
-        Leave:
-            return ret;
+
+            }
+            else
+            {
+                // move one layer down
+                possibilities = null;
+            }
         }
+
+        //private bool hasUniqueSolution(int[,] original)
+        //{
+        //    bool ret = true;
+        //    var matrix = (int[,])original.Clone();
+
+        //    for (int i = 0; i < 9; i++)
+        //    {
+        //        for (int j = 0; j < 9; j++)
+        //        {
+        //            if (matrix[i, j] == 0)
+        //            {
+        //                for (int value = 1; value < 10; value++)
+        //                {
+        //                    matrix[i, j] = value;
+
+        //                    if (isValidSudoku(matrix))
+        //                    {
+        //                        if (isComplete(matrix))
+        //                        {
+        //                            // add solution to collection
+        //                            _solutionCount++;
+        //                            goto Leave;
+        //                        }
+        //                        else
+        //                        {
+        //                            // move one layer up
+        //                            hasUniqueSolution(matrix);
+                                    
+        //                            if (_solutionCount > 1)
+        //                            {
+        //                                ret = false;
+        //                                goto Leave;
+        //                            }
+                                    
+        //                            // reset value
+        //                            matrix[i, j] = 0;
+        //                        }
+        //                    }
+        //                }
+
+        //                // move one layer down
+        //                goto Leave;
+        //            }
+        //        }
+        //    }
+
+        //Leave:
+        //    return ret;
+        //}
 
         #endregion Methods
     }

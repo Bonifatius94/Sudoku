@@ -26,6 +26,8 @@ namespace Sudoku.Client.Main
         private SudokuViewModel _sudoku = new SudokuViewModel();
         public SudokuViewModel Sudoku { get { return _sudoku; } }
 
+        private int[,] _solution;
+
         #endregion Members
 
         #region Methods
@@ -37,8 +39,8 @@ namespace Sudoku.Client.Main
 
         private async void generateSudokuAsync()
         {
-            var generator = new SudokuGenerator();
-            var matrix = await Task.Run<int[,]>(() => generator.GenerateSudoku(SudokuDifficutyLevel.Medium));
+            var matrix = await Task.Run<int[,]>(() => new SudokuGenerator().GenerateSudoku(SudokuDifficutyLevel.Medium, out _solution));
+
             _sudoku.ApplyMatrix(matrix);
             _sudoku.MarkSetFieldsAsFix();
         }
@@ -52,12 +54,13 @@ namespace Sudoku.Client.Main
         public void SolveSudoku()
         {
             _sudoku.MarkSetFieldsAsFix();
+            _sudoku.ApplyMatrix(_solution);
 
-            var matrix = _sudoku.GetMatrix();
-            var solver = new SudokuSolver();
-            var solution = solver.SolveSudoku(matrix);
+            //var matrix = _sudoku.GetMatrix();
+            //var solver = new SudokuSolver();
+            //var solution = solver.SolveSudoku(matrix);
 
-            _sudoku.ApplyMatrix(solution != null ? solution : new int[9, 9]);
+            //_sudoku.ApplyMatrix(solution != null ? solution : new int[9, 9]);
         }
 
         public override void CanClose(Action<bool> callback)

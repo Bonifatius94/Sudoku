@@ -18,10 +18,19 @@ namespace Sudoku.Client.Data
             var possibilities = matrixToPossibilities(matrix);
             solveSudoku(ref possibilities);
 
-            if (possibilities != null)
-            {
-                solution = possibilitiesToMatrix(possibilities);
-            }
+            if (possibilities != null) { solution = possibilitiesToMatrix(possibilities); }
+
+            return solution;
+        }
+
+        public bool[,,] SolveSudoku(bool[,,] original)
+        {
+            bool[,,] solution = null;
+
+            var possibilities = (bool[,,])original.Clone();
+            solveSudoku(ref possibilities);
+
+            if (possibilities != null) { solution = possibilities; }
 
             return solution;
         }
