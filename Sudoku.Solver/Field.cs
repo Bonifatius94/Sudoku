@@ -58,6 +58,9 @@ namespace Sudoku.Solver
         public Column Column { get; set; }
         public Square Square { get; set; }
 
+        public int RowIndex { get; set; }
+        public int ColumnIndex { get; set; }
+
         #endregion Members
 
         #region Methods

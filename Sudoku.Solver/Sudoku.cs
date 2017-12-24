@@ -48,6 +48,9 @@ namespace Sudoku.Solver
                             field.Row = _rows[rowIndex];
                             field.Column = _columns[columnIndex];
                             field.Square = _squares[i, j];
+
+                            field.RowIndex = rowIndex;
+                            field.ColumnIndex = columnIndex;
                         }
                     }
                 }
@@ -75,24 +78,24 @@ namespace Sudoku.Solver
 
         public bool IsSolved()
         {
-            return (getSolvedFieldsCount() == 81);
+            return (GetSolvedFieldsCount() == 81);
         }
 
         public void EliminatePossibilities()
         {
-            int solvedFields = getSolvedFieldsCount();
+            int solvedFields = GetSolvedFieldsCount();
             int newSolvedFields = solvedFields;
 
             do
             {
                 solvedFields = newSolvedFields;
                 GetFields1D().ToList().ForEach(x => x.SetValueIfDetermined());
-                newSolvedFields = getSolvedFieldsCount();
+                newSolvedFields = GetSolvedFieldsCount();
             }
             while (newSolvedFields > solvedFields);
         }
 
-        private int getSolvedFieldsCount()
+        public int GetSolvedFieldsCount()
         {
             int count = 0;
 

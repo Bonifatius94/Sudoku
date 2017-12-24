@@ -15,6 +15,60 @@ namespace Sudoku.Solver
         {
             return solveSudokuRecursive(ref sudoku);
         }
+        
+        public bool HasSudokuUniqueSolution(Sudoku sudoku)
+        {
+            var solution = SolveSudoku(sudoku);
+
+            if (solution != null)
+            {
+                int row = 0;
+                int column = 0;
+                Field originalField;
+
+                while ((originalField = getNextFreeField(sudoku, ref row, ref column)) != null)
+                {
+                    var solutionField = solution.Fields[row, column];
+                    var possibleValues = originalField.GetPossibleValues().Except(new int[] { solutionField.Value }).ToArray();
+                    var secondSolution = tryNextLevel(ref sudoku, row, column, possibleValues);
+                    if (secondSolution != null) { return false; }
+
+                    row = (column == 8) ? row + 1 : row;
+                    column = (column + 1) % 9;
+                }
+            }
+
+            return true;
+        }
+        
+        //public int GetSolutionsCount(Sudoku original)
+        //{
+        //    int count = 0;
+        //    var solution = SolveSudoku(original);
+
+        //    if (solution != null)
+        //    {
+        //        count++;
+
+        //        for (int row = 0; row < 9; row++)
+        //        {
+        //            for (int column = 0; column < 9; column++)
+        //            {
+        //                var originalField = original.Fields[row, column];
+        //                var solutionField = solution.Fields[row, column];
+
+        //                if (originalField.Value == 0)
+        //                {
+        //                    var possibleValues = originalField.GetPossibleValues().Except(new int[] { solutionField.Value }).ToArray();
+        //                    var result = tryNextLevel(ref original, row, column, possibleValues);
+        //                    if (result != null) { count++; }
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return count;
+        //}
 
         private Sudoku solveSudokuRecursive(ref Sudoku original, int row = 0, int column = 0)
         {
@@ -23,7 +77,7 @@ namespace Sudoku.Solver
             
             original.EliminatePossibilities();
 
-            while ((field = getNextFreeField(ref original, ref row, ref column)) != null)
+            while ((field = getNextFreeField(original, ref row, ref column)) != null)
             {
                 var possibleValues = field.GetPossibleValues();
 
@@ -55,7 +109,7 @@ namespace Sudoku.Solver
 
             // prepare row / column index for next recursion level
             int nextRow = (column == 8) ? row + 1 : row;
-            int nextColumn = (column + 1) % 8;
+            int nextColumn = (column + 1) % 9;
 
             foreach (int value in possibleValues)
             {
@@ -76,7 +130,7 @@ namespace Sudoku.Solver
             return result;
         }
 
-        private Field getNextFreeField(ref Sudoku sudoku, ref int row, ref int column)
+        private Field getNextFreeField(Sudoku sudoku, ref int row, ref int column)
         {
             for (; row < 9; row++)
             {

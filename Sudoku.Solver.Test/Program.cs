@@ -16,9 +16,15 @@ namespace Sudoku.Solver.Test
 
             var sudoku = getTestSudoku();
             var solution = new SudokuSolver().SolveSudoku(sudoku);
-            
+
             TraceOut.WriteInformation("\r\n" + sudoku.ToString());
             TraceOut.WriteInformation("\r\n" + solution?.ToString());
+
+            var isUnique = new SudokuSolver().HasSudokuUniqueSolution(sudoku);
+            TraceOut.WriteInformation(isUnique.ToString());
+
+            var genSudoku = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Extreme);
+            TraceOut.WriteInformation("\r\n" + genSudoku.ToString());
         }
 
         private static Sudoku getTestSudoku()
