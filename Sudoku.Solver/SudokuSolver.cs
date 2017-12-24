@@ -20,7 +20,7 @@ namespace Sudoku.Solver
         {
             Sudoku result = null;
             Field field;
-
+            
             original.EliminatePossibilities();
 
             while ((field = getNextFreeField(ref original, ref row, ref column)) != null)
@@ -68,11 +68,8 @@ namespace Sudoku.Solver
                     // go to next recursion level
                     result = solveSudokuRecursive(ref copy, nextRow, nextColumn);
 
-                    if (result != null)
-                    {
-                        // pass correct solution to lower recursion levels
-                        return result;
-                    }
+                    // pass correct solution to lower recursion levels
+                    if (result != null) { break; }
                 }
             }
 
@@ -92,6 +89,8 @@ namespace Sudoku.Solver
                         return field;
                     }
                 }
+
+                column = 0;
             }
 
             return null;

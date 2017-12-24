@@ -56,8 +56,8 @@ namespace Sudoku.Solver
         {
             var builder = new StringBuilder();
 
-            _fields.ToList().ForEach(x => builder.Append($"{ x.Value }, "));
-            builder.Remove(builder.Length - 2, 2);
+            _fields.ToList().ForEach(x => builder.Append($"{ x.Value } "));
+            builder.Remove(builder.Length - 1, 1);
 
             return builder.ToString();
         }

@@ -108,8 +108,8 @@ namespace Sudoku.Solver
         {
             var builder = new StringBuilder();
 
-            GetFields1D().ToList().ForEach(x => builder.Append($"{ x.Value }, "));
-            builder.Remove(builder.Length - 2, 2);
+            GetFields1D().ToList().ForEach(x => builder.Append($"{ x.Value } "));
+            builder.Remove(builder.Length - 1, 1);
 
             return builder.ToString();
         }

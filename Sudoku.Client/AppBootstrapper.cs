@@ -12,14 +12,13 @@ namespace Sudoku.Client
 
         public AppBootstrapper()
         {
-            TraceOut.Enable(@"C:\Trace\Sudoku.Client.exe.trc.txt", level: TraceLevel.All);
-            TraceOut.WriteBuildInfo();
-            TraceOut.Enter();
+            //TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.Client.exe.trc.txt", level: TraceLevel.All);
+            //TraceOut.Enter();
 
 			// start Caliburn.Micro framework
             Initialize();
 
-            TraceOut.Leave();
+            //TraceOut.Leave();
         }
 
         #endregion Constructor
