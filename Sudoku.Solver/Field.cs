@@ -107,7 +107,9 @@ namespace Sudoku.Solver
 
         public object Clone()
         {
-            var field = new Field(_possibilities);
+            var possibilities = new bool[_possibilitiesCount];
+            _possibilities.CopyTo(possibilities, 0);
+            var field = new Field(possibilities);
             return field;
         }
 

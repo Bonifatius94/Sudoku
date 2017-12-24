@@ -73,6 +73,11 @@ namespace Sudoku.Solver
             return ret;
         }
 
+        public bool IsSolved()
+        {
+            return (getSolvedFieldsCount() == 81);
+        }
+
         public void EliminatePossibilities()
         {
             int solvedFields = getSolvedFieldsCount();

@@ -12,12 +12,11 @@ namespace Sudoku.Solver.Test
     {
         public static void Main(string[] args)
         {
-            TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.Solver.Test.trc.txt", level: TraceLevel.All);
-
             var sudoku = getTestSudoku();
-            TraceOut.WriteInformation("\r\n" + sudoku.ToString());
-
             var solution = new SudokuSolver().SolveSudoku(sudoku);
+
+            TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.Solver.Test.trc.txt", level: TraceLevel.All);
+            TraceOut.WriteInformation("\r\n" + sudoku.ToString());
             TraceOut.WriteInformation("\r\n" + solution?.ToString());
         }
 

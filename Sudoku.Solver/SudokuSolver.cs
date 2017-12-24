@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MT.Tools.Tracing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,31 +29,7 @@ namespace Sudoku.Solver
 
                 if (possibleValues.Length > 1)
                 {
-                    // prepare row / column index for next recursion level
-                    int nextRow = (column == 8) ? row + 1 : row;
-                    int nextColumn = (column + 1) % 8;
-
-                    foreach (int value in possibleValues)
-                    {
-                        // make copy of sudoku and try out possibility
-                        var copy = (Sudoku)original.Clone();
-                        copy.Fields[row, column].SetValue(value);
-
-                        if (copy.IsValid())
-                        {
-                            // go to next recursion level
-                            result = solveSudokuRecursive(ref copy, nextRow, nextColumn);
-
-                            if (result != null)
-                            {
-                                // pass correct solution to lower recursion levels
-                                return result;
-                            }
-                        }
-                    }
-
-                    // all remaining possibilities did not work
-                    return null;
+                    return tryNextLevel(ref original, row, column, possibleValues);
                 }
                 else if (possibleValues.Length == 1)
                 {
@@ -61,6 +38,36 @@ namespace Sudoku.Solver
                 else
                 {
                     return null;
+                }
+            }
+
+            return original.IsSolved() ? original : result;
+        }
+
+        private Sudoku tryNextLevel(ref Sudoku sudoku, int row, int column, int[] possibleValues)
+        {
+            Sudoku result = null;
+
+            // prepare row / column index for next recursion level
+            int nextRow = (column == 8) ? row + 1 : row;
+            int nextColumn = (column + 1) % 8;
+
+            foreach (int value in possibleValues)
+            {
+                // make copy of sudoku and try out possibility
+                var copy = (Sudoku)sudoku.Clone();
+                copy.Fields[row, column].SetValue(value);
+
+                if (copy.IsValid())
+                {
+                    // go to next recursion level
+                    result = solveSudokuRecursive(ref copy, nextRow, nextColumn);
+
+                    if (result != null)
+                    {
+                        // pass correct solution to lower recursion levels
+                        return result;
+                    }
                 }
             }
 
