@@ -147,6 +147,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sudoku.Solver\Sudoku.Solver.csproj">
+      <Project>{D92B0475-8ECF-4992-B3CE-351189DDF6CA}</Project>
+      <Name>Sudoku.Solver</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

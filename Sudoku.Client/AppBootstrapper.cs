@@ -1,4 +1,5 @@
 using Caliburn.Micro;
+using MT.Tools.Tracing;
 using Sudoku.Client.Main;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,14 @@ namespace Sudoku.Client
 
         public AppBootstrapper()
         {
+            TraceOut.Enable(@"C:\Trace\Sudoku.Client.exe.trc.txt", level: TraceLevel.All);
+            TraceOut.WriteBuildInfo();
+            TraceOut.Enter();
+
 			// start Caliburn.Micro framework
             Initialize();
+
+            TraceOut.Leave();
         }
 
         #endregion Constructor

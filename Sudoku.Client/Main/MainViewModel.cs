@@ -6,9 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sudoku.Solver;
 
 namespace Sudoku.Client.Main
 {
+    public enum SudokuCreationMode
+    {
+        Automatic,
+        Manual
+    }
+
     public class MainViewModel : Screen, IShell
     {
         #region Constructor
@@ -16,17 +23,51 @@ namespace Sudoku.Client.Main
         public MainViewModel()
         {
             DisplayName = "Sudoku Solver v1.0";
-            _sudoku.ApplyMatrix(SudokuScoreSettings.Matrix);
+            _sudokuView.ApplySudoku(SudokuScoreSettings.Sudoku);
         }
 
         #endregion Constructor
 
         #region Members
+        
+        private SudokuViewModel _sudokuView = new SudokuViewModel();
+        public SudokuViewModel Sudoku { get { return _sudokuView; } }
 
-        private SudokuViewModel _sudoku = new SudokuViewModel();
-        public SudokuViewModel Sudoku { get { return _sudoku; } }
+        private Solver.Sudoku _solution;
 
-        private int[,] _solution;
+        #region CreationMode
+
+        private SudokuCreationMode _creationMode = SudokuCreationMode.Manual;
+
+        public bool IsChecked_Automatic
+        {
+            get { return _creationMode == SudokuCreationMode.Automatic; }
+            set
+            {
+                if (value)
+                {
+                    _creationMode = SudokuCreationMode.Automatic;
+                    NotifyOfPropertyChange(() => IsChecked_Automatic);
+                    NotifyOfPropertyChange(() => IsChecked_Manual);
+                }
+            }
+        }
+
+        public bool IsChecked_Manual
+        {
+            get { return _creationMode == SudokuCreationMode.Manual; }
+            set
+            {
+                if (value)
+                {
+                    _creationMode = SudokuCreationMode.Manual;
+                    NotifyOfPropertyChange(() => IsChecked_Automatic);
+                    NotifyOfPropertyChange(() => IsChecked_Manual);
+                }
+            }
+        }
+
+        #endregion CreationMode
 
         #endregion Members
 
@@ -34,27 +75,36 @@ namespace Sudoku.Client.Main
 
         public void GenerateSudoku()
         {
-            generateSudokuAsync();
-        }
+        //    generateSudokuAsync();
+        //}
 
-        private async void generateSudokuAsync()
-        {
-            var matrix = await Task.Run<int[,]>(() => new SudokuGenerator().GenerateSudoku(SudokuDifficutyLevel.Medium, out _solution));
+        //private async void generateSudokuAsync()
+        //{
+            _creationMode = SudokuCreationMode.Automatic;
+            NotifyOfPropertyChange(() => IsChecked_Automatic);
+            NotifyOfPropertyChange(() => IsChecked_Manual);
 
-            _sudoku.ApplyMatrix(matrix);
-            _sudoku.MarkSetFieldsAsFix();
+            _solution = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Medium);
+            _sudokuView.ApplySudoku(_solution);
+            _sudokuView.MarkSetFieldsAsFix();
         }
 
         public void ClearSudoku()
         {
-            _sudoku.ApplyMatrix(new int[9, 9]);
-            _sudoku.MarkSetFieldsAsFix();
+            _sudokuView.ApplySudoku(new Solver.Sudoku());
+            _sudokuView.MarkSetFieldsAsFix();
         }
 
         public void SolveSudoku()
         {
-            _sudoku.MarkSetFieldsAsFix();
-            _sudoku.ApplyMatrix(_solution);
+            if (_creationMode == SudokuCreationMode.Manual)
+            {
+                var sudoku = _sudokuView.GetSudoku();
+                _solution = new SudokuSolver().SolveSudoku(sudoku) ?? sudoku;
+            }
+
+            _sudokuView.MarkSetFieldsAsFix();
+            _sudokuView.ApplySudoku(_solution);
 
             //var matrix = _sudoku.GetMatrix();
             //var solver = new SudokuSolver();
@@ -66,7 +116,7 @@ namespace Sudoku.Client.Main
         public override void CanClose(Action<bool> callback)
         {
             // save score
-            SudokuScoreSettings.Matrix = _sudoku.GetMatrix();
+            SudokuScoreSettings.Sudoku = _sudokuView.GetSudoku();
             SudokuScoreSettings.SaveData();
 
             base.CanClose(callback);

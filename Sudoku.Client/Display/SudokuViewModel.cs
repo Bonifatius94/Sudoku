@@ -39,9 +39,9 @@ namespace Sudoku.Client.Display
 
         #region Methods
         
-        public int[,] GetMatrix()
+        public Solver.Sudoku GetSudoku()
         {
-            var matrix = new int[9, 9];
+            var sudoku = new Solver.Sudoku();
 
             for (int i = 0; i < 3; i++)
             {
@@ -51,17 +51,18 @@ namespace Sudoku.Client.Display
                     {
                         for (int l = 0; l < 3; l++)
                         {
-                            var value = _boxes[i, j].Fields[k, l].Value;
-                            matrix[i * 3 + k, j * 3 + l] = !string.IsNullOrEmpty(value) ? int.Parse(value) : 0;
+                            var valueAsString = _boxes[i, j].Fields[k, l].Value;
+                            var value = !string.IsNullOrEmpty(valueAsString) ? int.Parse(valueAsString) : 0;
+                            sudoku.Fields[i * 3 + k, j * 3 + l].SetValue(value);
                         }
                     }
                 }
             }
 
-            return matrix;
+            return sudoku;
         }
 
-        public void ApplyMatrix(int[,] matrix)
+        public void ApplySudoku(Solver.Sudoku sudoku)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -71,7 +72,7 @@ namespace Sudoku.Client.Display
                     {
                         for (int l = 0; l < 3; l++)
                         {
-                            _boxes[i, j].Fields[k, l].Value = matrix[i * 3 + k, j * 3 + l].ToString();
+                            _boxes[i, j].Fields[k, l].Value = sudoku.Fields[i * 3 + k, j * 3 + l].Value.ToString();
                         }
                     }
                 }

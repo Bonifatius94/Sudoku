@@ -1,479 +1,479 @@
-﻿using System;
+﻿//using System;
 
-namespace Sudoku.Client.Data
-{
-    public abstract class SudokuBase
-    {
-        #region Validation
+//namespace Sudoku.Client.Data
+//{
+//    public abstract class SudokuBase
+//    {
+//        #region Validation
 
-        protected bool isComplete(int[,] matrix)
-        {
-            bool ret = false;
+//        protected bool isComplete(int[,] matrix)
+//        {
+//            bool ret = false;
 
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    if (matrix[row, column] == 0) { goto Leave; }
-                }
-            }
+//            for (int row = 0; row < 9; row++)
+//            {
+//                for (int column = 0; column < 9; column++)
+//                {
+//                    if (matrix[row, column] == 0) { goto Leave; }
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        protected bool isComplete(bool[,,] possibilities)
-        {
-            bool ret = false;
+//        protected bool isComplete(bool[,,] possibilities)
+//        {
+//            bool ret = false;
 
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    if (getPossibilitiesCount(possibilities, row, column) != 1) { goto Leave; }
-                }
-            }
+//            for (int row = 0; row < 9; row++)
+//            {
+//                for (int column = 0; column < 9; column++)
+//                {
+//                    if (getPossibilitiesCount(possibilities, row, column) != 1) { goto Leave; }
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        protected bool isValidSudoku(int[,] matrix)
-        {
-            var ret = hasValidRows(matrix) && hasValidColumns(matrix) && hasValidBoxes(matrix);
-            return ret;
-        }
+//        protected bool isValidSudoku(int[,] matrix)
+//        {
+//            var ret = hasValidRows(matrix) && hasValidColumns(matrix) && hasValidBoxes(matrix);
+//            return ret;
+//        }
 
-        protected bool isValidSudoku(bool[,,] possibilities)
-        {
-            var ret = hasValidRows(possibilities) && hasValidColumns(possibilities) && hasValidBoxes(possibilities);
-            return ret;
-        }
+//        protected bool isValidSudoku(bool[,,] possibilities)
+//        {
+//            var ret = hasValidRows(possibilities) && hasValidColumns(possibilities) && hasValidBoxes(possibilities);
+//            return ret;
+//        }
 
-        protected bool hasValidRows(int[,] matrix)
-        {
-            var ret = false;
+//        protected bool hasValidRows(int[,] matrix)
+//        {
+//            var ret = false;
 
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column_1 = 0; column_1 < 9; column_1++)
-                {
-                    for (int column_2 = 0; column_2 < 9; column_2++)
-                    {
-                        int value1 = matrix[row, column_1];
-                        int value2 = matrix[row, column_2];
+//            for (int row = 0; row < 9; row++)
+//            {
+//                for (int column_1 = 0; column_1 < 9; column_1++)
+//                {
+//                    for (int column_2 = 0; column_2 < 9; column_2++)
+//                    {
+//                        int value1 = matrix[row, column_1];
+//                        int value2 = matrix[row, column_2];
 
-                        if (column_1 != column_2 && value1 != 0 && value2 != 0 && value1 == value2) { goto Leave; }
-                    }
-                }
-            }
+//                        if (column_1 != column_2 && value1 != 0 && value2 != 0 && value1 == value2) { goto Leave; }
+//                    }
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        protected bool hasValidRows(bool[,,] possibilities)
-        {
-            var ret = false;
-            int count = 0;
+//        protected bool hasValidRows(bool[,,] possibilities)
+//        {
+//            var ret = false;
+//            int count = 0;
 
-            for (int value = 0; value < 9; value++)
-            {
-                for (int row = 0; row < 9; row++)
-                {
-                    for (int column = 0; column < 9; column++)
-                    {
-                        if ((getPossibilitiesCount(possibilities, row, column) == 1) && (getPossibleValues(possibilities, row, column)[0] == value) && ++count > 1) { goto Leave; }
-                    }
+//            for (int value = 0; value < 9; value++)
+//            {
+//                for (int row = 0; row < 9; row++)
+//                {
+//                    for (int column = 0; column < 9; column++)
+//                    {
+//                        if ((getPossibilitiesCount(possibilities, row, column) == 1) && (getPossibleValues(possibilities, row, column)[0] == value) && ++count > 1) { goto Leave; }
+//                    }
 
-                    count = 0;
-                }
-            }
+//                    count = 0;
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        protected bool hasValidColumns(int[,] matrix)
-        {
-            var ret = false;
+//        protected bool hasValidColumns(int[,] matrix)
+//        {
+//            var ret = false;
 
-            for (int column = 0; column < 9; column++)
-            {
-                for (int row_1 = 0; row_1 < 9; row_1++)
-                {
-                    for (int row_2 = 0; row_2 < 9; row_2++)
-                    {
-                        int value1 = matrix[row_1, column];
-                        int value2 = matrix[row_2, column];
+//            for (int column = 0; column < 9; column++)
+//            {
+//                for (int row_1 = 0; row_1 < 9; row_1++)
+//                {
+//                    for (int row_2 = 0; row_2 < 9; row_2++)
+//                    {
+//                        int value1 = matrix[row_1, column];
+//                        int value2 = matrix[row_2, column];
 
-                        if (row_1 != row_2 && value1 != 0 && value2 != 0 && value1 == value2) { goto Leave; }
-                    }
-                }
-            }
+//                        if (row_1 != row_2 && value1 != 0 && value2 != 0 && value1 == value2) { goto Leave; }
+//                    }
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        protected bool hasValidColumns(bool[,,] possibilities)
-        {
-            var ret = false;
-            int count = 0;
+//        protected bool hasValidColumns(bool[,,] possibilities)
+//        {
+//            var ret = false;
+//            int count = 0;
 
-            for (int value = 0; value < 9; value++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    for (int row = 0; row < 9; row++)
-                    {
-                        if ((getPossibilitiesCount(possibilities, row, column) == 1) && (getPossibleValues(possibilities, row, column)[0] == value) && ++count > 1) { goto Leave; }
-                    }
+//            for (int value = 0; value < 9; value++)
+//            {
+//                for (int column = 0; column < 9; column++)
+//                {
+//                    for (int row = 0; row < 9; row++)
+//                    {
+//                        if ((getPossibilitiesCount(possibilities, row, column) == 1) && (getPossibleValues(possibilities, row, column)[0] == value) && ++count > 1) { goto Leave; }
+//                    }
 
-                    count = 0;
-                }
-            }
+//                    count = 0;
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        protected bool hasValidBoxes(int[,] matrix)
-        {
-            var ret = false;
+//        protected bool hasValidBoxes(int[,] matrix)
+//        {
+//            var ret = false;
 
-            for (int box_row_index = 0; box_row_index < 3; box_row_index++)
-            {
-                for (int box_column_index = 0; box_column_index < 3; box_column_index++)
-                {
-                    for (int box_row_1 = 0; box_row_1 < 3; box_row_1++)
-                    {
-                        for (int box_column_1 = 0; box_column_1 < 3; box_column_1++)
-                        {
-                            for (int box_row_2 = 0; box_row_2 < 3; box_row_2++)
-                            {
-                                for (int box_column_2 = 0; box_column_2 < 3; box_column_2++)
-                                {
-                                    int row_1    = box_row_index * 3 + box_row_1;
-                                    int row_2    = box_row_index * 3 + box_row_2;
-                                    int column_1 = box_column_index * 3 + box_column_1;
-                                    int column_2 = box_column_index * 3 + box_column_2;
+//            for (int box_row_index = 0; box_row_index < 3; box_row_index++)
+//            {
+//                for (int box_column_index = 0; box_column_index < 3; box_column_index++)
+//                {
+//                    for (int box_row_1 = 0; box_row_1 < 3; box_row_1++)
+//                    {
+//                        for (int box_column_1 = 0; box_column_1 < 3; box_column_1++)
+//                        {
+//                            for (int box_row_2 = 0; box_row_2 < 3; box_row_2++)
+//                            {
+//                                for (int box_column_2 = 0; box_column_2 < 3; box_column_2++)
+//                                {
+//                                    int row_1    = box_row_index * 3 + box_row_1;
+//                                    int row_2    = box_row_index * 3 + box_row_2;
+//                                    int column_1 = box_column_index * 3 + box_column_1;
+//                                    int column_2 = box_column_index * 3 + box_column_2;
 
-                                    int value1 = matrix[row_1, column_1];
-                                    int value2 = matrix[row_2, column_2];
+//                                    int value1 = matrix[row_1, column_1];
+//                                    int value2 = matrix[row_2, column_2];
 
-                                    if (row_1 != row_2 && column_1 != column_2 && value1 != 0 && value2 != 0 && value1 == value2) { goto Leave; }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+//                                    if (row_1 != row_2 && column_1 != column_2 && value1 != 0 && value2 != 0 && value1 == value2) { goto Leave; }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        protected bool hasValidBoxes(bool[,,] possibilities)
-        {
-            var ret = false;
+//        protected bool hasValidBoxes(bool[,,] possibilities)
+//        {
+//            var ret = false;
             
-            for (int value = 0; value < 9; value++)
-            {
-                for (int box_index_row = 0; box_index_row < 3; box_index_row++)
-                {
-                    for (int box_index_column = 0; box_index_column < 3; box_index_column++)
-                    {
-                        int count = 0;
+//            for (int value = 0; value < 9; value++)
+//            {
+//                for (int box_index_row = 0; box_index_row < 3; box_index_row++)
+//                {
+//                    for (int box_index_column = 0; box_index_column < 3; box_index_column++)
+//                    {
+//                        int count = 0;
 
-                        for (int row = box_index_row * 3; row < box_index_row * 3 + 3; row++)
-                        {
-                            for (int column = box_index_column * 3; column < box_index_column * 3 + 3; column++)
-                            {
-                                if ((getPossibilitiesCount(possibilities, row, column) == 1) && (getPossibleValues(possibilities, row, column)[0] == value) && ++count > 1) { goto Leave; }
-                            }
-                        }
+//                        for (int row = box_index_row * 3; row < box_index_row * 3 + 3; row++)
+//                        {
+//                            for (int column = box_index_column * 3; column < box_index_column * 3 + 3; column++)
+//                            {
+//                                if ((getPossibilitiesCount(possibilities, row, column) == 1) && (getPossibleValues(possibilities, row, column)[0] == value) && ++count > 1) { goto Leave; }
+//                            }
+//                        }
 
-                        count = 0;
-                    }
-                }
-            }
+//                        count = 0;
+//                    }
+//                }
+//            }
 
-            ret = true;
+//            ret = true;
 
-        Leave:
-            return ret;
-        }
+//        Leave:
+//            return ret;
+//        }
 
-        #endregion Validation
+//        #endregion Validation
 
-        #region Count
+//        #region Count
 
-        public int GetFixFieldsCount(int[,] matrix)
-        {
-            int ret = 0;
+//        public int GetFixFieldsCount(int[,] matrix)
+//        {
+//            int ret = 0;
 
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    if (matrix[row, column] != 0) { ret++; }
-                }
-            }
+//            for (int row = 0; row < 9; row++)
+//            {
+//                for (int column = 0; column < 9; column++)
+//                {
+//                    if (matrix[row, column] != 0) { ret++; }
+//                }
+//            }
 
-            return ret;
-        }
+//            return ret;
+//        }
 
-        public int GetFixFieldsCount(bool[,,] possibilities)
-        {
-            int ret = 0;
+//        public int GetFixFieldsCount(bool[,,] possibilities)
+//        {
+//            int ret = 0;
 
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    if (getPossibilitiesCount(possibilities, row, column) == 1) { ret++; }
-                }
-            }
+//            for (int row = 0; row < 9; row++)
+//            {
+//                for (int column = 0; column < 9; column++)
+//                {
+//                    if (getPossibilitiesCount(possibilities, row, column) == 1) { ret++; }
+//                }
+//            }
 
-            return ret;
-        }
+//            return ret;
+//        }
 
-        #endregion Count
+//        #endregion Count
 
-        #region Conversion
+//        #region Conversion
 
-        protected int[,] possibilitiesToMatrix(bool[,,] possibilities)
-        {
-            var matrix = new int[9, 9];
+//        protected int[,] possibilitiesToMatrix(bool[,,] possibilities)
+//        {
+//            var matrix = new int[9, 9];
 
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    int[] possibleValues = getPossibleValues(possibilities, row, column);
-                    matrix[row, column] = (possibleValues?.Length == 1) ? possibleValues[0] : 0;
-                }
-            }
+//            for (int row = 0; row < 9; row++)
+//            {
+//                for (int column = 0; column < 9; column++)
+//                {
+//                    int[] possibleValues = getPossibleValues(possibilities, row, column);
+//                    matrix[row, column] = (possibleValues?.Length == 1) ? possibleValues[0] : 0;
+//                }
+//            }
 
-            return matrix;
-        }
+//            return matrix;
+//        }
 
-        protected bool[,,] matrixToPossibilities(int[,] matrix)
-        {
-            var possibilities = new bool[9, 9, 9];
+//        protected bool[,,] matrixToPossibilities(int[,] matrix)
+//        {
+//            var possibilities = new bool[9, 9, 9];
 
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    var possiblitiesOfField = getPossibilities(matrix, row, column);
+//            for (int row = 0; row < 9; row++)
+//            {
+//                for (int column = 0; column < 9; column++)
+//                {
+//                    var possiblitiesOfField = getPossibilities(matrix, row, column);
 
-                    for (int i = 0; i < 9; i++)
-                    {
-                        possibilities[row, column, i] = possiblitiesOfField[i];
-                    }
-                }
-            }
+//                    for (int i = 0; i < 9; i++)
+//                    {
+//                        possibilities[row, column, i] = possiblitiesOfField[i];
+//                    }
+//                }
+//            }
 
-            return possibilities;
-        }
+//            return possibilities;
+//        }
 
-        #endregion Conversion
+//        #endregion Conversion
 
-        #region Possibilities
+//        #region Possibilities
 
-        protected void setValue(bool[,,] possibilities, int row, int column, int value)
-        {
-            if (possibilities[row, column, value - 1])
-            {
-                // eliminate remaining possibilities of field
-                for (int v = 1; v < 10; v++)
-                {
-                    if (v != value) { possibilities[row, column, v - 1] = false; }
-                }
+//        protected void setValue(bool[,,] possibilities, int row, int column, int value)
+//        {
+//            if (possibilities[row, column, value - 1])
+//            {
+//                // eliminate remaining possibilities of field
+//                for (int v = 1; v < 10; v++)
+//                {
+//                    if (v != value) { possibilities[row, column, v - 1] = false; }
+//                }
 
-                // eliminate possibilities with same value in row
-                for (int r = 0; r < 9; r++)
-                {
-                    if (r != row) { possibilities[r, column, value - 1] = false; }
-                }
+//                // eliminate possibilities with same value in row
+//                for (int r = 0; r < 9; r++)
+//                {
+//                    if (r != row) { possibilities[r, column, value - 1] = false; }
+//                }
 
-                // eliminate possibilities with same value in column
-                for (int c = 0; c < 9; c++)
-                {
-                    if (c != column) { possibilities[row, c, value - 1] = false; }
-                }
+//                // eliminate possibilities with same value in column
+//                for (int c = 0; c < 9; c++)
+//                {
+//                    if (c != column) { possibilities[row, c, value - 1] = false; }
+//                }
 
-                // eliminate possibilities with same value in box
-                for (int r = ((row / 3) * 3); r < ((row / 3) * 3) + 3; r++)
-                {
-                    for (int c = ((column / 3) * 3); c < ((column / 3) * 3) + 3; c++)
-                    {
-                        if (!(r == row && c == column)) { possibilities[r, c, value - 1] = false; }
-                    }
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException("Value is not possible any more!");
-            }
-        }
+//                // eliminate possibilities with same value in box
+//                for (int r = ((row / 3) * 3); r < ((row / 3) * 3) + 3; r++)
+//                {
+//                    for (int c = ((column / 3) * 3); c < ((column / 3) * 3) + 3; c++)
+//                    {
+//                        if (!(r == row && c == column)) { possibilities[r, c, value - 1] = false; }
+//                    }
+//                }
+//            }
+//            else
+//            {
+//                throw new InvalidOperationException("Value is not possible any more!");
+//            }
+//        }
         
-        protected bool[] getPossibilities(int[,] matrix, int row, int column)
-        {
-            bool[] possibilities = new bool[9];
+//        protected bool[] getPossibilities(int[,] matrix, int row, int column)
+//        {
+//            bool[] possibilities = new bool[9];
 
-            if (matrix[row, column] > 0)
-            {
-                possibilities[matrix[row, column] - 1] = true;
-            }
-            else
-            {
-                for (int val = 1; val < 10; val++)
-                {
-                    bool possible = false;
+//            if (matrix[row, column] > 0)
+//            {
+//                possibilities[matrix[row, column] - 1] = true;
+//            }
+//            else
+//            {
+//                for (int val = 1; val < 10; val++)
+//                {
+//                    bool possible = false;
 
-                    for (int c = 0; c < 9; c++)
-                    {
-                        if (c != column && matrix[row, c] == val) { goto Next; }
-                    }
+//                    for (int c = 0; c < 9; c++)
+//                    {
+//                        if (c != column && matrix[row, c] == val) { goto Next; }
+//                    }
 
-                    for (int r = 0; r < 9; r++)
-                    {
-                        if (r != row && matrix[r, column] == val) { goto Next; }
-                    }
+//                    for (int r = 0; r < 9; r++)
+//                    {
+//                        if (r != row && matrix[r, column] == val) { goto Next; }
+//                    }
 
-                    for (int r = ((row / 3) * 3); r < ((row / 3) * 3) + 3; r++)
-                    {
-                        for (int c = ((column / 3) * 3); c < ((column / 3) * 3) + 3; c++)
-                        {
-                            if (r != row && c != column && matrix[r, c] == val) { goto Next; }
-                        }
-                    }
+//                    for (int r = ((row / 3) * 3); r < ((row / 3) * 3) + 3; r++)
+//                    {
+//                        for (int c = ((column / 3) * 3); c < ((column / 3) * 3) + 3; c++)
+//                        {
+//                            if (r != row && c != column && matrix[r, c] == val) { goto Next; }
+//                        }
+//                    }
 
-                    possible = true;
+//                    possible = true;
 
-                Next:
-                    possibilities[val - 1] = possible;
-                }
-            }
+//                Next:
+//                    possibilities[val - 1] = possible;
+//                }
+//            }
 
-            return possibilities;
-        }
+//            return possibilities;
+//        }
         
-        protected int[] getPossibleValues(bool[] possibilities)
-        {
-            int i = 0;
-            int count = getPossibilitiesCount(possibilities);
-            int[] possibleValues = null;
+//        protected int[] getPossibleValues(bool[] possibilities)
+//        {
+//            int i = 0;
+//            int count = getPossibilitiesCount(possibilities);
+//            int[] possibleValues = null;
 
-            if (count > 0)
-            {
-                possibleValues = new int[count];
+//            if (count > 0)
+//            {
+//                possibleValues = new int[count];
 
-                for (int val = 1; val < 10; val++)
-                {
-                    if (possibilities[val - 1]) { possibleValues[i++] = val; }
-                }
-            }
+//                for (int val = 1; val < 10; val++)
+//                {
+//                    if (possibilities[val - 1]) { possibleValues[i++] = val; }
+//                }
+//            }
 
-            return possibleValues;
-        }
+//            return possibleValues;
+//        }
 
-        protected int[] getPossibleValues(bool[,,] possibilities, int row, int column)
-        {
-            int i = 0;
-            int count = getPossibilitiesCount(possibilities, row, column);
-            int[] possibleValues = null;
+//        protected int[] getPossibleValues(bool[,,] possibilities, int row, int column)
+//        {
+//            int i = 0;
+//            int count = getPossibilitiesCount(possibilities, row, column);
+//            int[] possibleValues = null;
 
-            if (count > 0)
-            {
-                possibleValues = new int[count];
+//            if (count > 0)
+//            {
+//                possibleValues = new int[count];
 
-                for (int val = 1; val < 10; val++)
-                {
-                    if (possibilities[row, column, val - 1]) { possibleValues[i++] = val; }
-                }
-            }
+//                for (int val = 1; val < 10; val++)
+//                {
+//                    if (possibilities[row, column, val - 1]) { possibleValues[i++] = val; }
+//                }
+//            }
 
-            return possibleValues;
-        }
+//            return possibleValues;
+//        }
 
-        protected int getPossibilitiesCount(bool[,,] possibilities, int row, int column)
-        {
-            int count = 0;
+//        protected int getPossibilitiesCount(bool[,,] possibilities, int row, int column)
+//        {
+//            int count = 0;
 
-            for (int i = 0; i < 9; i++)
-            {
-                if (possibilities[row, column, i]) { count++; }
-            }
+//            for (int i = 0; i < 9; i++)
+//            {
+//                if (possibilities[row, column, i]) { count++; }
+//            }
 
-            return count;
-        }
+//            return count;
+//        }
 
-        protected int getPossibilitiesCount(bool[] possibilities)
-        {
-            int count = 0;
+//        protected int getPossibilitiesCount(bool[] possibilities)
+//        {
+//            int count = 0;
 
-            for (int i = 0; i < 9; i++)
-            {
-                if (possibilities[i]) { count++; }
-            }
+//            for (int i = 0; i < 9; i++)
+//            {
+//                if (possibilities[i]) { count++; }
+//            }
 
-            return count;
-        }
+//            return count;
+//        }
 
-        #endregion Possibilities
+//        #endregion Possibilities
 
-        #region Trace
+//        #region Trace
 
-        protected void writeSudoku(int[,] matrix)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                Console.WriteLine("+ ----- + ----- + ----- +");
+//        protected void writeSudoku(int[,] matrix)
+//        {
+//            for (int i = 0; i < 3; i++)
+//            {
+//                Console.WriteLine("+ ----- + ----- + ----- +");
 
-                for (int j = 0; j < 3; j++)
-                {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        Console.Write("| ");
+//                for (int j = 0; j < 3; j++)
+//                {
+//                    for (int k = 0; k < 3; k++)
+//                    {
+//                        Console.Write("| ");
 
-                        for (int l = 0; l < 3; l++)
-                        {
-                            int value = matrix[i * 3 + j, k * 3 + l];
-                            Console.Write($"{ (value != 0 ? value.ToString() : " ") } ");
-                        }
-                    }
+//                        for (int l = 0; l < 3; l++)
+//                        {
+//                            int value = matrix[i * 3 + j, k * 3 + l];
+//                            Console.Write($"{ (value != 0 ? value.ToString() : " ") } ");
+//                        }
+//                    }
 
-                    Console.WriteLine("|");
-                }
-            }
+//                    Console.WriteLine("|");
+//                }
+//            }
 
-            Console.WriteLine("+ ----- + ----- + ----- +");
-        }
+//            Console.WriteLine("+ ----- + ----- + ----- +");
+//        }
 
-        protected void writeSudoku(bool[,,] possibilities)
-        {
-            var matrix = possibilitiesToMatrix(possibilities);
-            writeSudoku(matrix);
-        }
+//        protected void writeSudoku(bool[,,] possibilities)
+//        {
+//            var matrix = possibilitiesToMatrix(possibilities);
+//            writeSudoku(matrix);
+//        }
 
-        #endregion Trace
-    }
-}
+//        #endregion Trace
+//    }
+//}

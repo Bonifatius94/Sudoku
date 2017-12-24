@@ -29,7 +29,8 @@ namespace Sudoku.Solver
 
                 if (possibleValues.Length > 1)
                 {
-                    return tryNextLevel(ref original, row, column, possibleValues);
+                    result = tryNextLevel(ref original, row, column, possibleValues);
+                    goto Leave;
                 }
                 else if (possibleValues.Length == 1)
                 {
@@ -37,11 +38,15 @@ namespace Sudoku.Solver
                 }
                 else
                 {
-                    return null;
+                    result = null;
+                    goto Leave;
                 }
             }
 
-            return original.IsSolved() ? original : result;
+            result = original.IsSolved() ? original : result;
+
+        Leave:
+            return result;
         }
 
         private Sudoku tryNextLevel(ref Sudoku sudoku, int row, int column, int[] possibleValues)

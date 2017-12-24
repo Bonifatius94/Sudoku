@@ -7,10 +7,12 @@
         xmlns:display="clr-namespace:Sudoku.Client.Display"
         
         mc:Ignorable="d"
-        Height="400" Width="350">
+        Height="420" Width="350">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
@@ -22,9 +24,15 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <display:SudokuView DataContext="{Binding Sudoku}" Grid.Row="0" Grid.Column="1" />
-        
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="3">
+            <TextBlock Text="Sudoku creation mode:" Margin="0,0,10,0" />
+            <RadioButton IsChecked="{Binding IsChecked_Automatic}" Content="automatic" Margin="0,0,10,0" VerticalContentAlignment="Center" />
+            <RadioButton IsChecked="{Binding IsChecked_Manual}" Content="manual" VerticalContentAlignment="Center" />
+        </StackPanel>
+
+        <display:SudokuView DataContext="{Binding Sudoku}" Grid.Row="2" Grid.Column="1" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="3">
             <Button cal:Message.Attach="GenerateSudoku" Content="Generate" MinWidth="70" Margin="0,0,10,0" />
             <Button cal:Message.Attach="ClearSudoku" Content="Clear" MinWidth="70" Margin="0,0,10,0" />
             <Button cal:Message.Attach="SolveSudoku" Content="Solve" MinWidth="70" />

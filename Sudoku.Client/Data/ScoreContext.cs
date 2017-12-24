@@ -29,7 +29,7 @@ namespace Sudoku.Client.Data
         private const string XML_ATTRIBUTE_COLUMN = "column";
         private const string XML_ATTRIBUTE_VALUE = "value";
 
-        public static int[,] Matrix { get; set; }
+        public static Solver.Sudoku Sudoku { get; set; }
 
         #endregion Members
 
@@ -37,7 +37,7 @@ namespace Sudoku.Client.Data
 
         public static void LoadData()
         {
-            Matrix = new int[9, 9];
+            Sudoku = new Solver.Sudoku();
 
             if (File.Exists(TEMP_SCORE_FILE))
             {
@@ -52,7 +52,7 @@ namespace Sudoku.Client.Data
                                 int row = int.Parse(reader.GetAttribute(XML_ATTRIBUTE_ROW));
                                 int column = int.Parse(reader.GetAttribute(XML_ATTRIBUTE_COLUMN));
                                 int value = int.Parse(reader.GetAttribute(XML_ATTRIBUTE_VALUE));
-                                Matrix[row, column] = value;
+                                Sudoku.Fields[row, column].SetValue(value);
 
                                 break;
                         }
@@ -81,7 +81,7 @@ namespace Sudoku.Client.Data
                 {
                     for (int column = 0; column < 9; column++)
                     {
-                        int value = Matrix[row, column];
+                        int value = Sudoku.Fields[row, column].Value;
 
                         if (value != 0)
                         {
