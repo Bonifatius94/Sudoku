@@ -84,8 +84,11 @@ namespace Sudoku.Client.Main
             NotifyOfPropertyChange(() => IsChecked_Automatic);
             NotifyOfPropertyChange(() => IsChecked_Manual);
 
-            _solution = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Medium);
-            _sudokuView.ApplySudoku(_solution);
+            var sudoku = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Medium);
+            var temp = (Solver.Sudoku)sudoku.Clone();
+            _solution = new SudokuSolver().SolveSudoku(temp);
+
+            _sudokuView.ApplySudoku(sudoku);
             _sudokuView.MarkSetFieldsAsFix();
         }
 
