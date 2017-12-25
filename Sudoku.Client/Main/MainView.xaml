@@ -7,10 +7,12 @@
         xmlns:display="clr-namespace:Sudoku.Client.Display"
         
         mc:Ignorable="d"
-        Height="430" Width="350">
+        Height="460" Width="400">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
@@ -36,6 +38,11 @@
             <Button cal:Message.Attach="GenerateSudoku" Content="Generate" MinWidth="70" Margin="0,0,10,0" />
             <Button cal:Message.Attach="ClearSudoku" Content="Clear" MinWidth="70" Margin="0,0,10,0" />
             <Button cal:Message.Attach="SolveSudoku" Content="Solve" MinWidth="70" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="3">
+            <TextBlock Text="Sudoku creation mode:" VerticalAlignment="Center" Margin="0,0,10,0" />
+            <ComboBox ItemsSource="{Binding Difficulties}" SelectedItem="{Binding SelectedDifficulty}" Grid.Row="6" Grid.ColumnSpan="3" MinWidth="100" />
         </StackPanel>
     </Grid>
 </Window>

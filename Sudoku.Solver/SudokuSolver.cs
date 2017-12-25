@@ -13,7 +13,8 @@ namespace Sudoku.Solver
 
         public Sudoku SolveSudoku(Sudoku sudoku)
         {
-            return solveSudokuRecursive(ref sudoku);
+            var temp = (Sudoku)sudoku.Clone();
+            return solveSudokuRecursive(temp);
         }
         
         public bool HasSudokuUniqueSolution(Sudoku sudoku)
@@ -32,7 +33,7 @@ namespace Sudoku.Solver
                 {
                     var solutionField = solution.Fields[row, column];
                     var possibleValues = originalField.GetPossibleValues().Except(new int[] { solutionField.Value }).ToArray();
-                    var secondSolution = tryNextLevel(ref temp, row, column, possibleValues);
+                    var secondSolution = tryNextLevel(temp, row, column, possibleValues);
                     if (secondSolution != null && !solution.Equals(secondSolution)) { return false; }
 
                     row = (column == 8) ? row + 1 : row;
@@ -43,7 +44,7 @@ namespace Sudoku.Solver
             return true;
         }
         
-        private Sudoku solveSudokuRecursive(ref Sudoku original, int row = 0, int column = 0)
+        private Sudoku solveSudokuRecursive(Sudoku original, int row = 0, int column = 0)
         {
             Sudoku result = null;
             Field field;
@@ -57,7 +58,7 @@ namespace Sudoku.Solver
 
                 if (possibleValues.Length > 1)
                 {
-                    result = tryNextLevel(ref original, row, column, possibleValues);
+                    result = tryNextLevel(original, row, column, possibleValues);
                     goto Leave;
                 }
                 else if (possibleValues.Length == 1)
@@ -77,7 +78,7 @@ namespace Sudoku.Solver
             return result;
         }
 
-        private Sudoku tryNextLevel(ref Sudoku sudoku, int row, int column, int[] possibleValues)
+        private Sudoku tryNextLevel(Sudoku sudoku, int row, int column, int[] possibleValues)
         {
             Sudoku result = null;
 
@@ -94,7 +95,7 @@ namespace Sudoku.Solver
                 if (copy.IsValid())
                 {
                     // go to next recursion level
-                    result = solveSudokuRecursive(ref copy, nextRow, nextColumn);
+                    result = solveSudokuRecursive(copy, nextRow, nextColumn);
 
                     // pass correct solution to lower recursion levels
                     if (result != null) { break; }

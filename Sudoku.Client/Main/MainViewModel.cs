@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sudoku.Solver;
+using System.Collections.ObjectModel;
 
 namespace Sudoku.Client.Main
 {
@@ -69,27 +70,51 @@ namespace Sudoku.Client.Main
 
         #endregion CreationMode
 
+        #region Difficulty
+
+        private static readonly Dictionary<SudokuDifficuty, string> _difficultyValues = new Dictionary<SudokuDifficuty, string>()
+        {
+            { SudokuDifficuty.Easy, SudokuDifficuty.Easy.ToString() },
+            { SudokuDifficuty.Medium, SudokuDifficuty.Medium.ToString() },
+            { SudokuDifficuty.Hard, SudokuDifficuty.Hard.ToString() },
+            { SudokuDifficuty.Extreme, SudokuDifficuty.Extreme.ToString() },
+        };
+
+        private ObservableCollection<string> _difficulties = new ObservableCollection<string>(_difficultyValues.Values);
+        public ObservableCollection<string> Difficulties { get { return _difficulties; } }
+
+        private SudokuDifficuty _selectedDifficulty = SudokuDifficuty.Medium;
+        public string SelectedDifficulty
+        {
+            get { return _selectedDifficulty.ToString(); }
+            set
+            {
+                _selectedDifficulty = _difficultyValues.Where(x => x.Value.Equals(value)).FirstOrDefault().Key;
+                NotifyOfPropertyChange(() => SelectedDifficulty);
+            }
+        }
+
+        #endregion Difficulty
+
         #endregion Members
 
         #region Methods
 
-        public void GenerateSudoku()
+        public async void GenerateSudoku()
         {
-        //    generateSudokuAsync();
-        //}
-
-        //private async void generateSudokuAsync()
-        //{
             _creationMode = SudokuCreationMode.Automatic;
             NotifyOfPropertyChange(() => IsChecked_Automatic);
             NotifyOfPropertyChange(() => IsChecked_Manual);
 
-            var sudoku = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Medium);
-            var temp = (Solver.Sudoku)sudoku.Clone();
-            _solution = new SudokuSolver().SolveSudoku(temp);
+            await Task.Run(() =>
+            {
+                var sudoku = new SudokuGenerator().GenerateSudoku(_selectedDifficulty);
+                var temp = (Solver.Sudoku)sudoku.Clone();
+                _solution = new SudokuSolver().SolveSudoku(temp);
 
-            _sudokuView.ApplySudoku(sudoku);
-            _sudokuView.MarkSetFieldsAsFix();
+                _sudokuView.ApplySudoku(sudoku);
+                _sudokuView.MarkSetFieldsAsFix();
+            });
         }
 
         public void ClearSudoku()
