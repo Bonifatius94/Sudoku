@@ -27,19 +27,23 @@ namespace Sudoku.Solver
 
         public Sudoku GenerateSudoku(SudokuDifficuty difficulty)
         {
+            var solver = new SudokuSolver();
             var sudoku = getRandomSudoku();
-            TraceOut.WriteInformation("\r\n" + sudoku.ToString());
+            Sudoku temp;
 
-            //int solvedFields = sudoku.GetSolvedFieldsCount();
-            //var solution = solver.SolveSudoku(sudoku);
-            
-            //for (int i = solvedFields; i < (int)difficulty; i++)
+            //do
             //{
-            //    var field = getRandomFreeField(sudoku);
-            //    field.SetValue(solution.Fields[field.RowIndex, field.ColumnIndex].Value);
-            //}
+                temp = (Sudoku)sudoku.Clone();
 
-            return sudoku;
+                for (int i = 0; i < 81 - (int)difficulty; i++)
+                {
+                    var field = getRandomFilledField(temp);
+                    field.SetValue(0);
+                }
+
+            //} while (solver.HasSudokuUniqueSolution(temp));
+            
+            return temp;
         }
 
         private Sudoku getRandomSudoku()
@@ -47,27 +51,56 @@ namespace Sudoku.Solver
             var sudoku = new Sudoku();
             var solver = new SudokuSolver();
 
-            while (!solver.HasSudokuUniqueSolution(sudoku))
+            for (int i = 0; i < 15; i++)
             {
                 Sudoku temp;
                 var field = getRandomFreeField(sudoku);
                 var possibleValues = field.GetPossibleValues();
+                int value;
 
                 do
                 {
-                    int value = getRandomPossibleValue(possibleValues);
+                    value = getRandomPossibleValue(possibleValues);
                     temp = (Sudoku)sudoku.Clone();
                     temp.Fields[field.RowIndex, field.ColumnIndex].SetValue(value);
                     possibleValues = possibleValues.Except(new int[] { value }).ToArray();
 
                 } while (solver.SolveSudoku(temp) == null);
 
-                sudoku = temp;
-                TraceOut.WriteInformation("\r\n" + sudoku.ToString());
+                // set value in sudoku
+                field.SetValue(value);
             }
-
-            return sudoku;
+            
+            return solver.SolveSudoku(sudoku);
         }
+
+        //private Sudoku getRandomSudoku()
+        //{
+        //    var sudoku = new Sudoku();
+        //    var solver = new SudokuSolver();
+
+        //    while (!solver.HasSudokuUniqueSolution(sudoku))
+        //    {
+        //        Sudoku temp;
+        //        var field = getRandomFreeField(sudoku);
+        //        var possibleValues = field.GetPossibleValues();
+        //        int value;
+
+        //        do
+        //        {
+        //            value = getRandomPossibleValue(possibleValues);
+        //            temp = (Sudoku)sudoku.Clone();
+        //            temp.Fields[field.RowIndex, field.ColumnIndex].SetValue(value);
+        //            possibleValues = possibleValues.Except(new int[] { value }).ToArray();
+
+        //        } while (solver.SolveSudoku(temp) == null);
+
+        //        // set value in sudoku
+        //        field.SetValue(value);
+        //    }
+
+        //    return sudoku;
+        //}
         
         private int getRandomPossibleValue(int[] possibleValues)
         {
@@ -75,9 +108,9 @@ namespace Sudoku.Solver
             return possibleValues[index];
         }
 
-        private Field getRandomField(Sudoku sudoku)
+        private Field getRandomFilledField(Sudoku sudoku)
         {
-            var fields = sudoku.GetFields1D().ToList();
+            var fields = sudoku.GetFields1D().Where(x => x.Value > 0).ToList();
             int index = _random.Next(fields.Count);
             return fields[index];
         }

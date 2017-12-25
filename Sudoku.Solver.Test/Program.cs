@@ -25,6 +25,8 @@ namespace Sudoku.Solver.Test
 
             var genSudoku = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Extreme);
             TraceOut.WriteInformation("\r\n" + genSudoku.ToString());
+            TraceOut.WriteInformation(new SudokuSolver().HasSudokuUniqueSolution(genSudoku).ToString());
+            TraceOut.WriteInformation("\r\n" + genSudoku.ToString());
         }
 
         private static Sudoku getTestSudoku()

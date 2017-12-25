@@ -137,7 +137,32 @@ namespace Sudoku.Solver
 
             return builder.ToString();
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            var sudoku = obj as Sudoku;
+
+            if (sudoku != null)
+            {
+                for (int i = 0; i < _length; i++)
+                {
+                    for (int j = 0; j < _length; j++)
+                    {
+                        if (Fields[i, j].Value != sudoku.Fields[i, j].Value) { return false; }
+
+                        for (int k = 0; k < _length; k++)
+                        {
+                            if (Fields[i, j].Possibilities[k] != sudoku.Fields[i, j].Possibilities[k]) { return false; }
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         #endregion Methods
     }
 }
