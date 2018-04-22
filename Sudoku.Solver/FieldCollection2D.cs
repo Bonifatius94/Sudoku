@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Sudoku.Solver
 {
@@ -40,6 +38,7 @@ namespace Sudoku.Solver
         #region Members
 
         protected int _length;
+        public int Length { get { return _length; } }
 
         protected Field[,] _fields;
         public Field[,] Fields { get { return _fields; } }

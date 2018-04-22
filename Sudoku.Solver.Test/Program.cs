@@ -13,6 +13,7 @@ namespace Sudoku.Solver.Test
         public static void Main(string[] args)
         {
             TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.Solver.Test.trc.txt", level: TraceLevel.All);
+            TraceOut.Enter();
 
             var sudoku = getTestSudoku();
             var solution = new SudokuSolver().SolveSudoku(sudoku);
@@ -23,10 +24,16 @@ namespace Sudoku.Solver.Test
             var isUnique = new SudokuSolver().HasSudokuUniqueSolution(sudoku);
             TraceOut.WriteInformation(isUnique.ToString());
 
-            var genSudoku = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Extreme);
-            TraceOut.WriteInformation("\r\n" + genSudoku.ToString());
-            TraceOut.WriteInformation(new SudokuSolver().HasSudokuUniqueSolution(genSudoku).ToString());
-            TraceOut.WriteInformation("\r\n" + genSudoku.ToString());
+            // generate 100 sudokus, check if they have a unique solution and find out the solution
+            for (int i = 0; i < 100; i++)
+            {
+                var genSudoku = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Extreme);
+                TraceOut.WriteInformation("\r\n" + genSudoku.ToString());
+                TraceOut.WriteInformation(new SudokuSolver().HasSudokuUniqueSolution(genSudoku).ToString());
+                TraceOut.WriteInformation("\r\n" + new SudokuSolver().SolveSudoku(genSudoku));
+            }
+
+            TraceOut.Leave();
         }
 
         private static Sudoku getTestSudoku()

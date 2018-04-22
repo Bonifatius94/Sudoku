@@ -109,8 +109,7 @@ namespace Sudoku.Client.Main
             await Task.Run(() =>
             {
                 var sudoku = new SudokuGenerator().GenerateSudoku(_selectedDifficulty);
-                var temp = (Solver.Sudoku)sudoku.Clone();
-                _solution = new SudokuSolver().SolveSudoku(temp);
+                _solution = new SudokuSolver().SolveSudoku(sudoku);
 
                 _sudokuView.ApplySudoku(sudoku);
                 _sudokuView.MarkSetFieldsAsFix();

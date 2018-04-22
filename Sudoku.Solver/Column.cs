@@ -11,7 +11,7 @@ namespace Sudoku.Solver
         #region Constructor
 
         public Column(Field[] fields) : base(fields) { }
-        public Column() : base(9) { }
+        public Column(int length = 9) : base(length) { }
 
         #endregion Constructor
     }

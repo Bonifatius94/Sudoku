@@ -49,6 +49,7 @@
     <Compile Include="FieldCollection2D.cs" />
     <Compile Include="ISudokuSubcollection.cs" />
     <Compile Include="Row.cs" />
+    <Compile Include="ShuffleEx.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Sudoku.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

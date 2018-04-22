@@ -1,9 +1,6 @@
 ﻿using MT.Tools.Tracing;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sudoku.Solver
 {
@@ -24,104 +21,28 @@ namespace Sudoku.Solver
         #endregion Members
 
         #region Methods
-
-        public Sudoku GenerateSudoku(SudokuDifficuty difficulty)
+        
+        public Sudoku GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
         {
+            // get filled out random sudoku
             var solver = new SudokuSolver();
-            var sudoku = getRandomSudoku();
-            Sudoku temp;
+            var sudoku = solver.SolveSudoku(new Sudoku());
 
-            //do
-            //{
-                temp = (Sudoku)sudoku.Clone();
-
-                for (int i = 0; i < 81 - (int)difficulty; i++)
-                {
-                    var field = getRandomFilledField(temp);
-                    field.SetValue(0);
-                }
-
-            //} while (solver.HasSudokuUniqueSolution(temp));
-            
-            return temp;
-        }
-
-        private Sudoku getRandomSudoku()
-        {
-            var sudoku = new Sudoku();
-            var solver = new SudokuSolver();
-
-            for (int i = 0; i < 15; i++)
+            // reset several values (depending on desired difficulty)
+            for (int i = 0; i < (length * length) - (int)difficulty; i++)
             {
-                Sudoku temp;
-                var field = getRandomFreeField(sudoku);
-                var possibleValues = field.GetPossibleValues();
-                int value;
-
-                do
-                {
-                    value = getRandomPossibleValue(possibleValues);
-                    temp = (Sudoku)sudoku.Clone();
-                    temp.Fields[field.RowIndex, field.ColumnIndex].SetValue(value);
-                    possibleValues = possibleValues.Except(new int[] { value }).ToArray();
-
-                } while (solver.SolveSudoku(temp) == null);
-
-                // set value in sudoku
-                field.SetValue(value);
+                var fields = sudoku.GetFields1D().Where(x => x.Value > 0).ToList();
+                int index = _random.Next(fields.Count);
+                var field = fields[index];
+                field.SetValue(0);
             }
             
-            return solver.SolveSudoku(sudoku);
+            // check if sudoku has a unique solution (if not, generate a new one and repeat procedure)
+            sudoku = (!solver.HasSudokuUniqueSolution(sudoku)) ? GenerateSudoku(difficulty) : sudoku;
+            
+            return sudoku;
         }
-
-        //private Sudoku getRandomSudoku()
-        //{
-        //    var sudoku = new Sudoku();
-        //    var solver = new SudokuSolver();
-
-        //    while (!solver.HasSudokuUniqueSolution(sudoku))
-        //    {
-        //        Sudoku temp;
-        //        var field = getRandomFreeField(sudoku);
-        //        var possibleValues = field.GetPossibleValues();
-        //        int value;
-
-        //        do
-        //        {
-        //            value = getRandomPossibleValue(possibleValues);
-        //            temp = (Sudoku)sudoku.Clone();
-        //            temp.Fields[field.RowIndex, field.ColumnIndex].SetValue(value);
-        //            possibleValues = possibleValues.Except(new int[] { value }).ToArray();
-
-        //        } while (solver.SolveSudoku(temp) == null);
-
-        //        // set value in sudoku
-        //        field.SetValue(value);
-        //    }
-
-        //    return sudoku;
-        //}
         
-        private int getRandomPossibleValue(int[] possibleValues)
-        {
-            int index = _random.Next(possibleValues.Length);
-            return possibleValues[index];
-        }
-
-        private Field getRandomFilledField(Sudoku sudoku)
-        {
-            var fields = sudoku.GetFields1D().Where(x => x.Value > 0).ToList();
-            int index = _random.Next(fields.Count);
-            return fields[index];
-        }
-
-        private Field getRandomFreeField(Sudoku sudoku)
-        {
-            var freeFields = sudoku.GetFields1D().Where(x => x.Value == 0).ToList();
-            int index = _random.Next(freeFields.Count);
-            return freeFields[index];
-        }
-
         #endregion Methods
     }
 }

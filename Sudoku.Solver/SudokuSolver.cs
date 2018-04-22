@@ -1,9 +1,6 @@
 ﻿using MT.Tools.Tracing;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sudoku.Solver
 {
@@ -13,35 +10,45 @@ namespace Sudoku.Solver
 
         public Sudoku SolveSudoku(Sudoku sudoku)
         {
-            var temp = (Sudoku)sudoku.Clone();
-            return solveSudokuRecursive(temp);
+            return solveSudokuRecursive(sudoku);
         }
         
         public bool HasSudokuUniqueSolution(Sudoku sudoku)
         {
-            var temp = (Sudoku)sudoku.Clone();
-            var solution = SolveSudoku(temp);
+            // solve sudoku (gets one solution out of many solutions)
+            var solution = SolveSudoku(sudoku);
+            bool ret = false;
 
             if (solution != null)
             {
                 int row = 0;
                 int column = 0;
                 Field originalField;
-                temp = (Sudoku)sudoku.Clone();
+                var temp = (Sudoku)sudoku.Clone();
 
+                // go through all empty fields (filled out fields are ignored)
                 while ((originalField = getNextFreeField(temp, ref row, ref column)) != null)
                 {
-                    var solutionField = solution.Fields[row, column];
-                    var possibleValues = originalField.GetPossibleValues().Except(new int[] { solutionField.Value }).ToArray();
-                    var secondSolution = tryNextLevel(temp, row, column, possibleValues);
-                    if (secondSolution != null && !solution.Equals(secondSolution)) { return false; }
+                    // get value of field from solution
+                    int solutionValue = solution.Fields[row, column].Value;
 
-                    row = (column == 8) ? row + 1 : row;
-                    column = (column + 1) % 9;
+                    // try to solve the sudoku again, but without the value from the solution
+                    var possibleValues = originalField.GetPossibleValues().Except(new int[] { solutionValue }).ToArray();
+                    var secondSolution = tryNextLevel(temp, row, column, possibleValues);
+
+                    // if there is a second solution, the sudoku has definitely not a unique solution => leave with false
+                    if (secondSolution != null && !solution.Equals(secondSolution)) { goto Leave; }
+
+                    // increment row / column index => this avoids checking a field twice
+                    incrementFieldIndices(ref row, ref column, sudoku.Length);
                 }
             }
 
-            return true;
+            // all empty fields have a unique solution => there is no second solution => leave with true
+            ret = true;
+
+        Leave:
+            return ret;
         }
         
         private Sudoku solveSudokuRecursive(Sudoku original, int row = 0, int column = 0)
@@ -49,20 +56,26 @@ namespace Sudoku.Solver
             Sudoku result = null;
             Field field;
             
-            // TODO: avoid overwriting of original sudoku
-            original.EliminatePossibilities();
+            // make a copy of overloaded sudoku
+            var copy = (Sudoku)original.Clone();
 
-            while ((field = getNextFreeField(original, ref row, ref column)) != null)
+            // eliminate possibilities in copy / fill out fields with a single remaining possibility
+            copy.EliminatePossibilities();
+
+            // go through all empty fields
+            while ((field = getNextFreeField(copy, ref row, ref column)) != null)
             {
-                var possibleValues = field.GetPossibleValues();
-
-                if (possibleValues.Length > 1)
+                var possibleValues = field.GetPossibleValues().Shuffle();
+                
+                if (possibleValues.Count > 1)
                 {
-                    result = tryNextLevel(original, row, column, possibleValues);
+                    // case with multiple remaining possibilities => try each of them with brute force
+                    result = tryNextLevel(copy, row, column, possibleValues);
                     goto Leave;
                 }
-                else if (possibleValues.Length == 1)
+                else if (possibleValues.Count == 1)
                 {
+                    // case with a single remaining possibility => set value
                     field.SetValueIfDetermined();
                 }
                 else
@@ -72,19 +85,20 @@ namespace Sudoku.Solver
                 }
             }
 
-            result = original.IsSolved() ? original : result;
+            result = copy.IsSolved() ? copy : result;
 
         Leave:
             return result;
         }
 
-        private Sudoku tryNextLevel(Sudoku sudoku, int row, int column, int[] possibleValues)
+        private Sudoku tryNextLevel(Sudoku sudoku, int row, int column, IEnumerable<int> possibleValues)
         {
             Sudoku result = null;
 
             // prepare row / column index for next recursion level
-            int nextRow = (column == 8) ? row + 1 : row;
-            int nextColumn = (column + 1) % 9;
+            int nextRow = row;
+            int nextColumn = column;
+            incrementFieldIndices(ref nextRow, ref nextColumn, sudoku.Length);
 
             foreach (int value in possibleValues)
             {
@@ -101,24 +115,35 @@ namespace Sudoku.Solver
                     if (result != null) { break; }
                 }
             }
-
+            
             return result;
         }
 
         private Field getNextFreeField(Sudoku sudoku, ref int row, ref int column)
         {
-            for (; row < 9; row++)
+            Field field;
+            
+            for (; row < sudoku.Length; row++)
             {
-                for (; column < 9; column++)
+                for (; column < sudoku.Length; column++)
                 {
-                    var field = sudoku.Fields[row, column];
-                    if (field.Value == 0) { return field; }
+                    field = sudoku.Fields[row, column];
+                    if (field.Value == 0) { goto Leave; }
                 }
 
                 column = 0;
             }
 
-            return null;
+            field = null;
+
+        Leave:
+            return field;
+        }
+
+        private void incrementFieldIndices(ref int row, ref int column, int length)
+        {
+            row = (column == length - 1) ? row + 1 : row;
+            column = (column + 1) % length;
         }
         
         #endregion Methods
