@@ -13,19 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Sudoku.Client.Display
+namespace Sudoku.UI.Display
 {
     /// <summary>
-    /// Interaction logic for FieldView.xaml
+    /// Interaction logic for SudokuNoteFieldViewModel.xaml
     /// </summary>
-    public partial class SudokuFieldView : UserControl
+    public partial class SudokuNoteFieldView : UserControl
     {
-        public SudokuFieldView()
+        public SudokuNoteFieldView()
         {
             InitializeComponent();
         }
-
-        public int Row;
-        public int Column;
     }
 }

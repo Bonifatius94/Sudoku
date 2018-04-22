@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Sudoku.Client.Helper
+namespace Sudoku.UI.Helper
 {
     public class DelegateCommand : ICommand
     {

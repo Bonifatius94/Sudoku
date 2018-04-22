@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="Sudoku.Client.Display.SudokuBoxView"
+﻿<UserControl x:Class="Sudoku.UI.Display.SudokuBoxView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Sudoku.Client.Display"
+             xmlns:local="clr-namespace:Sudoku.UI.Display"
              
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -29,15 +29,15 @@
             <ColumnDefinition Width="2" />
         </Grid.ColumnDefinitions>
 
-        <local:SudokuFieldView x:Name="Field_0_0" DataContext="{Binding Field_0_0}" Grid.Row="1" Grid.Column="1" />
-        <local:SudokuFieldView x:Name="Field_0_1" DataContext="{Binding Field_0_1}" Grid.Row="1" Grid.Column="3" />
-        <local:SudokuFieldView x:Name="Field_0_2" DataContext="{Binding Field_0_2}" Grid.Row="1" Grid.Column="5" />
-        <local:SudokuFieldView x:Name="Field_1_0" DataContext="{Binding Field_1_0}" Grid.Row="3" Grid.Column="1" />
-        <local:SudokuFieldView x:Name="Field_1_1" DataContext="{Binding Field_1_1}" Grid.Row="3" Grid.Column="3" />
-        <local:SudokuFieldView x:Name="Field_1_2" DataContext="{Binding Field_1_2}" Grid.Row="3" Grid.Column="5" />
-        <local:SudokuFieldView x:Name="Field_2_0" DataContext="{Binding Field_2_0}" Grid.Row="5" Grid.Column="1" />
-        <local:SudokuFieldView x:Name="Field_2_1" DataContext="{Binding Field_2_1}" Grid.Row="5" Grid.Column="3" />
-        <local:SudokuFieldView x:Name="Field_2_2" DataContext="{Binding Field_2_2}" Grid.Row="5" Grid.Column="5" />
+        <local:SudokuSetFieldView x:Name="Field_0_0" DataContext="{Binding Field_0_0}" Grid.Row="1" Grid.Column="1" />
+        <local:SudokuSetFieldView x:Name="Field_0_1" DataContext="{Binding Field_0_1}" Grid.Row="1" Grid.Column="3" />
+        <local:SudokuSetFieldView x:Name="Field_0_2" DataContext="{Binding Field_0_2}" Grid.Row="1" Grid.Column="5" />
+        <local:SudokuSetFieldView x:Name="Field_1_0" DataContext="{Binding Field_1_0}" Grid.Row="3" Grid.Column="1" />
+        <local:SudokuSetFieldView x:Name="Field_1_1" DataContext="{Binding Field_1_1}" Grid.Row="3" Grid.Column="3" />
+        <local:SudokuSetFieldView x:Name="Field_1_2" DataContext="{Binding Field_1_2}" Grid.Row="3" Grid.Column="5" />
+        <local:SudokuSetFieldView x:Name="Field_2_0" DataContext="{Binding Field_2_0}" Grid.Row="5" Grid.Column="1" />
+        <local:SudokuSetFieldView x:Name="Field_2_1" DataContext="{Binding Field_2_1}" Grid.Row="5" Grid.Column="3" />
+        <local:SudokuSetFieldView x:Name="Field_2_2" DataContext="{Binding Field_2_2}" Grid.Row="5" Grid.Column="5" />
 
         <Border Background="Black" Grid.Row="0" Grid.ColumnSpan="7" />
         <Border Background="Black" Grid.Row="2" Grid.ColumnSpan="7" />

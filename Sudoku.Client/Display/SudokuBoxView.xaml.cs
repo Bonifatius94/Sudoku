@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Sudoku.Client.Display
+namespace Sudoku.UI.Display
 {
     /// <summary>
     /// Interaction logic for SudokuBoxView.xaml
@@ -24,7 +24,7 @@ namespace Sudoku.Client.Display
         {
             InitializeComponent();
 
-            Fields = new SudokuFieldView[3, 3]
+            Fields = new SudokuSetFieldView[3, 3]
             {
                 {
                     Field_0_0,
@@ -44,6 +44,6 @@ namespace Sudoku.Client.Display
             };
         }
 
-        public SudokuFieldView[,] Fields;
+        public SudokuSetFieldView[,] Fields;
     }
 }

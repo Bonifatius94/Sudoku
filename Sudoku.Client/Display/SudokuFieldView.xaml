@@ -1,9 +1,0 @@
-﻿<UserControl x:Class="Sudoku.Client.Display.SudokuFieldView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:helper="clr-namespace:Sudoku.Client.Helper">
-
-    <helper:SelectionBindingTextBox 
-        Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" BindableSelectionStart="{Binding SelectionStart, Mode=OneWay}"
-        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}" />
-</UserControl>

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Sudoku.Client.Display
+namespace Sudoku.UI.Display
 {
     /// <summary>
     /// Interaction logic for SudokuViewModel.xaml
@@ -96,7 +96,7 @@ namespace Sudoku.Client.Display
 
         private void Field_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            var field = sender as SudokuFieldView;
+            var field = sender as SudokuSetFieldView;
 
             if (field != null)
             {

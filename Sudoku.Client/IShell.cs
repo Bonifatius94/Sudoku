@@ -1,5 +1,5 @@
 
-namespace Sudoku.Client
+namespace Sudoku.UI
 {
     public interface IShell
     {

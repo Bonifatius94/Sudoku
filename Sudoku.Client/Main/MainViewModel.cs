@@ -1,15 +1,15 @@
 ﻿using Caliburn.Micro;
-using Sudoku.Client.Display;
-using Sudoku.Client.Data;
+using Sudoku.UI.Display;
+using Sudoku.UI.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Sudoku.Solver;
 using System.Collections.ObjectModel;
+using MT.Tools.Tracing;
 
-namespace Sudoku.Client.Main
+namespace Sudoku.UI.Main
 {
     public enum SudokuCreationMode
     {
@@ -34,7 +34,7 @@ namespace Sudoku.Client.Main
         private SudokuViewModel _sudokuView = new SudokuViewModel();
         public SudokuViewModel Sudoku { get { return _sudokuView; } }
 
-        private Solver.Sudoku _solution;
+        private UISudoku _solution;
 
         #region CreationMode
 
@@ -100,53 +100,60 @@ namespace Sudoku.Client.Main
 
         #region Methods
 
-        public async void GenerateSudoku()
+        public void GenerateSudoku()
         {
+            TraceOut.Enter();
+
             _creationMode = SudokuCreationMode.Automatic;
             NotifyOfPropertyChange(() => IsChecked_Automatic);
             NotifyOfPropertyChange(() => IsChecked_Manual);
+            
+            var sudoku = new UISudoku(new SudokuGenerator().GenerateSudoku(_selectedDifficulty));
+            _solution = new UISudoku(new SudokuSolver().SolveSudoku(sudoku));
 
-            await Task.Run(() =>
-            {
-                var sudoku = new SudokuGenerator().GenerateSudoku(_selectedDifficulty);
-                _solution = new SudokuSolver().SolveSudoku(sudoku);
+            _sudokuView.ClearSudoku();
+            _sudokuView.ApplySudoku(sudoku);
+            _sudokuView.MarkSetFieldsAsFix();
 
-                _sudokuView.ApplySudoku(sudoku);
-                _sudokuView.MarkSetFieldsAsFix();
-            });
+            TraceOut.Leave();
         }
 
         public void ClearSudoku()
         {
-            _sudokuView.ApplySudoku(new Solver.Sudoku());
-            _sudokuView.MarkSetFieldsAsFix();
+            TraceOut.Enter();
+
+            _sudokuView.ClearSudoku();
+
+            TraceOut.Leave();
         }
 
         public void SolveSudoku()
         {
+            TraceOut.Enter();
+
             if (_creationMode == SudokuCreationMode.Manual)
             {
                 var sudoku = _sudokuView.GetSudoku();
-                _solution = new SudokuSolver().SolveSudoku(sudoku) ?? sudoku;
+                _solution = new UISudoku(new SudokuSolver().SolveSudoku(sudoku) ?? sudoku);
             }
 
-            _sudokuView.MarkSetFieldsAsFix();
+            _solution.IsFix = _sudokuView.GetSudoku().IsFix;
             _sudokuView.ApplySudoku(_solution);
-
-            //var matrix = _sudoku.GetMatrix();
-            //var solver = new SudokuSolver();
-            //var solution = solver.SolveSudoku(matrix);
-
-            //_sudoku.ApplyMatrix(solution != null ? solution : new int[9, 9]);
+            
+            TraceOut.Leave();
         }
 
         public override void CanClose(Action<bool> callback)
         {
+            TraceOut.Enter();
+
             // save score
             SudokuScoreSettings.Sudoku = _sudokuView.GetSudoku();
             SudokuScoreSettings.SaveData();
 
             base.CanClose(callback);
+
+            TraceOut.Leave();
         }
 
         #endregion Methods

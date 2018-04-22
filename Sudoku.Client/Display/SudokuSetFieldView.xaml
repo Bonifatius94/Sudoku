@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="Sudoku.UI.Display.SudokuSetFieldView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helper="clr-namespace:Sudoku.UI.Helper">
+
+    <UserControl.InputBindings>
+        <!-- set number -->
+        <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+        <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+        <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+        <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+        <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+        <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+        <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+        <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+        <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+        <!-- delete value -->
+        <KeyBinding Key="D0"      Command="{Binding KeyPressed_0}"   />
+        <KeyBinding Gesture="Delete" Command="{Binding KeyPressed_Del}" />
+    </UserControl.InputBindings>
+
+    <TextBox 
+        Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+        <TextBox.InputBindings>
+            <!-- set number -->
+            <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+            <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+            <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+            <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+            <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+            <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+            <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+            <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+            <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+            <!-- delete value -->
+            <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+            <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+            <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+        </TextBox.InputBindings>
+    </TextBox>
+</UserControl>

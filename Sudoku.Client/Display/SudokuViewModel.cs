@@ -1,6 +1,8 @@
 ﻿using Caliburn.Micro;
+using MT.Tools.Tracing;
+using Sudoku.UI.Data;
 
-namespace Sudoku.Client.Display
+namespace Sudoku.UI.Display
 {
     public class SudokuViewModel : Screen
     {
@@ -39,9 +41,11 @@ namespace Sudoku.Client.Display
 
         #region Methods
         
-        public Solver.Sudoku GetSudoku()
+        public UISudoku GetSudoku()
         {
-            var sudoku = new Solver.Sudoku();
+            TraceOut.Enter();
+
+            var sudoku = new UISudoku();
 
             for (int i = 0; i < 3; i++)
             {
@@ -51,19 +55,21 @@ namespace Sudoku.Client.Display
                     {
                         for (int l = 0; l < 3; l++)
                         {
-                            var valueAsString = _boxes[i, j].Fields[k, l].Value;
-                            var value = !string.IsNullOrEmpty(valueAsString) ? int.Parse(valueAsString) : 0;
-                            sudoku.Fields[i * 3 + k, j * 3 + l].SetValue(value);
+                            sudoku.Fields[i * 3 + k, j * 3 + l].SetValue(_boxes[i, j].Fields[k, l].GetValue());
+                            sudoku.IsFix[i * 3 + k, j * 3 + l] = _boxes[i, j].Fields[k, l].IsFix;
                         }
                     }
                 }
             }
 
+            TraceOut.Leave();
             return sudoku;
         }
 
-        public void ApplySudoku(Solver.Sudoku sudoku)
+        public void ApplySudoku(UISudoku sudoku)
         {
+            TraceOut.Enter();
+
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
@@ -72,15 +78,42 @@ namespace Sudoku.Client.Display
                     {
                         for (int l = 0; l < 3; l++)
                         {
-                            _boxes[i, j].Fields[k, l].Value = sudoku.Fields[i * 3 + k, j * 3 + l].Value.ToString();
+                            _boxes[i, j].Fields[k, l].SetValue(sudoku.Fields[i * 3 + k, j * 3 + l].Value);
+                            _boxes[i, j].Fields[k, l].IsFix = sudoku.IsFix[i * 3 + k, j * 3 + l];
                         }
                     }
                 }
             }
+
+            TraceOut.Leave();
+        }
+
+        public void ClearSudoku()
+        {
+            TraceOut.Enter();
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        for (int l = 0; l < 3; l++)
+                        {
+                            _boxes[i, j].Fields[k, l].IsFix = false;
+                            _boxes[i, j].Fields[k, l].SetValue(0);
+                        }
+                    }
+                }
+            }
+
+            TraceOut.Leave();
         }
 
         public void MarkSetFieldsAsFix()
         {
+            TraceOut.Enter();
+
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
@@ -90,11 +123,13 @@ namespace Sudoku.Client.Display
                         for (int l = 0; l < 3; l++)
                         {
                             var field = _boxes[i, j].Fields[k, l];
-                            field.IsFix = !string.IsNullOrEmpty(field.Value);
+                            field.IsFix = (field.GetValue() != 0);
                         }
                     }
                 }
             }
+
+            TraceOut.Leave();
         }
         
         #endregion Methods

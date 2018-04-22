@@ -1,10 +1,10 @@
 using Caliburn.Micro;
 using MT.Tools.Tracing;
-using Sudoku.Client.Main;
+using Sudoku.UI.Main;
 using System;
 using System.Collections.Generic;
 
-namespace Sudoku.Client
+namespace Sudoku.UI
 {
     public class AppBootstrapper : BootstrapperBase
     {
@@ -12,13 +12,13 @@ namespace Sudoku.Client
 
         public AppBootstrapper()
         {
-            //TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.Client.exe.trc.txt", level: TraceLevel.All);
-            //TraceOut.Enter();
+            TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.UI.exe.trc.txt", level: TraceLevel.All);
+            TraceOut.Enter();
 
-			// start Caliburn.Micro framework
+            // start Caliburn.Micro framework
             Initialize();
 
-            //TraceOut.Leave();
+            TraceOut.Leave();
         }
 
         #endregion Constructor
@@ -51,8 +51,9 @@ namespace Sudoku.Client
 				// use GetInstance from container
                 instance = container.GetInstance(service, key);
             }
-            catch (Exception/* ex*/)
+            catch (Exception ex)
             {
+                TraceOut.WriteException(ex);
             }
 
             if (instance == null)

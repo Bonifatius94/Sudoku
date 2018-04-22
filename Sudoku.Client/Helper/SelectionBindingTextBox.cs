@@ -1,100 +1,100 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿//using System.Windows;
+//using System.Windows.Controls;
 
-namespace Sudoku.Client.Helper
-{
-    public class SelectionBindingTextBox : TextBox
-    {
-        public static readonly DependencyProperty BindableSelectionStartProperty = DependencyProperty.Register(
-            "BindableSelectionStart",
-            typeof(int),
-            typeof(SelectionBindingTextBox),
-            new PropertyMetadata(OnBindableSelectionStartChanged)
-        );
+//namespace Sudoku.UI.Helper
+//{
+//    public class SelectionBindingTextBox : TextBox
+//    {
+//        public static readonly DependencyProperty BindableSelectionStartProperty = DependencyProperty.Register(
+//            "BindableSelectionStart",
+//            typeof(int),
+//            typeof(SelectionBindingTextBox),
+//            new PropertyMetadata(OnBindableSelectionStartChanged)
+//        );
 
-        public static readonly DependencyProperty BindableSelectionLengthProperty = DependencyProperty.Register(
-            "BindableSelectionLength",
-            typeof(int),
-            typeof(SelectionBindingTextBox),
-            new PropertyMetadata(OnBindableSelectionLengthChanged)
-        );
+//        public static readonly DependencyProperty BindableSelectionLengthProperty = DependencyProperty.Register(
+//            "BindableSelectionLength",
+//            typeof(int),
+//            typeof(SelectionBindingTextBox),
+//            new PropertyMetadata(OnBindableSelectionLengthChanged)
+//        );
 
-        private bool changeFromUI;
+//        private bool changeFromUI;
 
-        public SelectionBindingTextBox() : base()
-        {
-            this.SelectionChanged += this.OnSelectionChanged;
-        }
+//        public SelectionBindingTextBox() : base()
+//        {
+//            this.SelectionChanged += this.OnSelectionChanged;
+//        }
 
-        public int BindableSelectionStart
-        {
-            get
-            {
-                return (int)this.GetValue(BindableSelectionStartProperty);
-            }
+//        public int BindableSelectionStart
+//        {
+//            get
+//            {
+//                return (int)this.GetValue(BindableSelectionStartProperty);
+//            }
 
-            set
-            {
-                this.SetValue(BindableSelectionStartProperty, value);
-            }
-        }
+//            set
+//            {
+//                this.SetValue(BindableSelectionStartProperty, value);
+//            }
+//        }
 
-        public int BindableSelectionLength
-        {
-            get
-            {
-                return (int)this.GetValue(BindableSelectionLengthProperty);
-            }
+//        public int BindableSelectionLength
+//        {
+//            get
+//            {
+//                return (int)this.GetValue(BindableSelectionLengthProperty);
+//            }
 
-            set
-            {
-                this.SetValue(BindableSelectionLengthProperty, value);
-            }
-        }
+//            set
+//            {
+//                this.SetValue(BindableSelectionLengthProperty, value);
+//            }
+//        }
 
-        private static void OnBindableSelectionStartChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-        {
-            var textBox = dependencyObject as SelectionBindingTextBox;
+//        private static void OnBindableSelectionStartChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+//        {
+//            var textBox = dependencyObject as SelectionBindingTextBox;
 
-            if (!textBox.changeFromUI)
-            {
-                int newValue = (int)args.NewValue;
-                textBox.SelectionStart = newValue;
-            }
-            else
-            {
-                textBox.changeFromUI = false;
-            }
-        }
+//            if (!textBox.changeFromUI)
+//            {
+//                int newValue = (int)args.NewValue;
+//                textBox.SelectionStart = newValue;
+//            }
+//            else
+//            {
+//                textBox.changeFromUI = false;
+//            }
+//        }
 
-        private static void OnBindableSelectionLengthChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
-        {
-            var textBox = dependencyObject as SelectionBindingTextBox;
+//        private static void OnBindableSelectionLengthChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+//        {
+//            var textBox = dependencyObject as SelectionBindingTextBox;
 
-            if (!textBox.changeFromUI)
-            {
-                int newValue = (int)args.NewValue;
-                textBox.SelectionLength = newValue;
-            }
-            else
-            {
-                textBox.changeFromUI = false;
-            }
-        }
+//            if (!textBox.changeFromUI)
+//            {
+//                int newValue = (int)args.NewValue;
+//                textBox.SelectionLength = newValue;
+//            }
+//            else
+//            {
+//                textBox.changeFromUI = false;
+//            }
+//        }
 
-        private void OnSelectionChanged(object sender, RoutedEventArgs e)
-        {
-            if (this.BindableSelectionStart != this.SelectionStart)
-            {
-                this.changeFromUI = true;
-                this.BindableSelectionStart = this.SelectionStart;
-            }
+//        private void OnSelectionChanged(object sender, RoutedEventArgs e)
+//        {
+//            if (this.BindableSelectionStart != this.SelectionStart)
+//            {
+//                this.changeFromUI = true;
+//                this.BindableSelectionStart = this.SelectionStart;
+//            }
 
-            if (this.BindableSelectionLength != this.SelectionLength)
-            {
-                this.changeFromUI = true;
-                this.BindableSelectionLength = this.SelectionLength;
-            }
-        }
-    }
-}
+//            if (this.BindableSelectionLength != this.SelectionLength)
+//            {
+//                this.changeFromUI = true;
+//                this.BindableSelectionLength = this.SelectionLength;
+//            }
+//        }
+//    }
+//}

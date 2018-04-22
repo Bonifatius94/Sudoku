@@ -1,15 +1,23 @@
-﻿<Window x:Class="Sudoku.Client.Main.MainView"
+﻿<Window x:Class="Sudoku.UI.Main.MainView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cal="http://www.caliburnproject.org"
-        xmlns:display="clr-namespace:Sudoku.Client.Display"
+        xmlns:display="clr-namespace:Sudoku.UI.Display"
         
         mc:Ignorable="d"
-        Height="460" Width="360">
+        Height="460" Width="360" Name="myMainWindow">
 
-    <Grid Margin="10">
+    <Grid Margin="10" Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="ApplicationScaleTransform"
+                        CenterX="0"
+                        CenterY="0"
+                        ScaleX="{Binding ElementName=myMainWindow, Path=ScaleValue}"
+                        ScaleY="{Binding ElementName=myMainWindow, Path=ScaleValue}" />
+        </Grid.LayoutTransform>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
