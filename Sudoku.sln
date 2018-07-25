@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.UI", "Sudoku.Client\Sudoku.UI.csproj", "{EF31C66A-48D0-47B6-8355-120DBE1C8156}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.Solver", "Sudoku.Solver\Sudoku.Solver.csproj", "{D92B0475-8ECF-4992-B3CE-351189DDF6CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.Algorithms", "Sudoku.Solver\Sudoku.Algorithms.csproj", "{D92B0475-8ECF-4992-B3CE-351189DDF6CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.Solver.Test", "Sudoku.Solver.Test\Sudoku.Solver.Test.csproj", "{0769E43C-0EF9-4DEC-A700-E2A878093EC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.Algorithms.Test", "Sudoku.Solver.Test\Sudoku.Algorithms.Test.csproj", "{0769E43C-0EF9-4DEC-A700-E2A878093EC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

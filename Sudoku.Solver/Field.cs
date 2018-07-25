@@ -2,52 +2,54 @@
 using System.Linq;
 using System.Text;
 
-namespace Sudoku.Solver
+namespace Sudoku.Algorithms
 {
     public class Field : ICloneable
     {
         #region Constructor
 
-        public Field(int value = 0, int possibilitiesCount = 9)
+        public Field(int value = 0, int maxPossibilities = 9)
         {
-            _value = value;
-            _possibilitiesCount = possibilitiesCount;
-            _possibilities = new bool[_possibilitiesCount];
+            _maxPossibilities = maxPossibilities;
+            _possibilities = new bool[_maxPossibilities];
             
-            if (_value == 0)
+            if (value == 0)
             {
-                for (int i = 0; i < _possibilitiesCount; i++)
+                for (int i = 0; i < _maxPossibilities; i++)
                 {
                     _possibilities[i] = true;
                 }
             }
             else
             {
-                _possibilities[_value - 1] = true;
+                _possibilities[value - 1] = true;
             }
         }
 
         public Field(bool[] possibilities)
         {
             _possibilities = possibilities;
-            _possibilitiesCount = _possibilities.Length;
-
-            var possibleValues = GetPossibleValues();
-            _value = (possibleValues != null && possibleValues.Length == 1) ? possibleValues[0] : 0;
+            _maxPossibilities = _possibilities.Length;
         }
 
         #endregion Constructor
 
         #region Members
-
-        protected int _value;
+        
         protected bool[] _possibilities;
-        protected int _possibilitiesCount;
+        protected int _maxPossibilities;
         
         /// <summary>
         /// This represents the current value of the field. If value is zero, no value is set (zero is default).
         /// </summary>
-        public int Value { get { return _value; } }
+        public int Value
+        {
+            get
+            {
+                var possibleValues = GetPossibleValues();
+                return (possibleValues != null && possibleValues.Length == 1) ? possibleValues[0] : 0;
+            }
+        }
         
         /// <summary>
         /// This represents the currently possible values of the field (value = index - 1, true means value is still possible). If only one possibility is left, the value is set automatically.
@@ -67,16 +69,14 @@ namespace Sudoku.Solver
 
         public void SetValue(int value)
         {
-            _value = value;
-
-            if (value > 0 && value <= _possibilitiesCount)
+            if (value > 0 && value <= _maxPossibilities)
             {
                 Row.EliminatePossibility(value);
                 Column.EliminatePossibility(value);
                 Square.EliminatePossibility(value);
 
-                _possibilities = new bool[_possibilitiesCount];
-                _possibilities[_value - 1] = true;
+                _possibilities = new bool[_maxPossibilities];
+                _possibilities[value - 1] = true;
             }
             else if (value < 0)
             {
@@ -110,7 +110,7 @@ namespace Sudoku.Solver
 
         public object Clone()
         {
-            var possibilities = new bool[_possibilitiesCount];
+            var possibilities = new bool[_maxPossibilities];
             _possibilities.CopyTo(possibilities, 0);
             var field = new Field(possibilities);
             return field;

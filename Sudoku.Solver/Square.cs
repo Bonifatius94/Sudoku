@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sudoku.Solver
+namespace Sudoku.Algorithms
 {
     public class Square : FieldCollection2D
     {

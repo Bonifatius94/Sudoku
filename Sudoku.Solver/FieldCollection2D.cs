@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Sudoku.Solver
+namespace Sudoku.Algorithms
 {
     public abstract class FieldCollection2D : ISudokuSubcollection
     {

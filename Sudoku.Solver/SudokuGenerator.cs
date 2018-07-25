@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace Sudoku.Solver
+namespace Sudoku.Algorithms
 {
     public enum SudokuDifficuty
     {

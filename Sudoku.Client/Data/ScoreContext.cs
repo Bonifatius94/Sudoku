@@ -98,9 +98,9 @@ namespace Sudoku.UI.Data
 
         #region Methods
 
-        public Solver.Field[,] Convert()
+        public Algorithms.Field[,] Convert()
         {
-            var sudokufields = new Solver.Field[9, 9];
+            var sudokufields = new Algorithms.Field[9, 9];
             fields.ForEach(x => sudokufields[x.row, x.column].SetValue(x.value));
             return sudokufields;
         }

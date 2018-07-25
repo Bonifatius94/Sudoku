@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sudoku.Solver
+namespace Sudoku.Algorithms
 {
     public class SudokuSolver
     {
@@ -121,6 +121,8 @@ namespace Sudoku.Solver
 
         private Field getNextFreeField(Sudoku sudoku, ref int row, ref int column)
         {
+            // TODO: refactor this code. it is very complicated.
+
             Field field;
             
             for (; row < sudoku.Length; row++)

@@ -7,8 +7,8 @@
     <ProjectGuid>{D92B0475-8ECF-4992-B3CE-351189DDF6CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sudoku.Solver</RootNamespace>
-    <AssemblyName>Sudoku.Solver</AssemblyName>
+    <RootNamespace>Sudoku.Algorithms</RootNamespace>
+    <AssemblyName>Sudoku.Algorithms</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

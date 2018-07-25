@@ -1,31 +1,93 @@
 ﻿using MT.Tools.Tracing;
-using Sudoku.Solver;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sudoku.Solver.Test
+namespace Sudoku.Algorithms.Test
 {
     public class Program
     {
+        #region Main
+
         public static void Main(string[] args)
         {
             TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.Solver.Test.trc.txt", level: TraceLevel.All);
             TraceOut.Enter();
 
-            var sudoku = getTestSudoku();
-            var solution = new SudokuSolver().SolveSudoku(sudoku);
+            Program instance = new Program();
 
+            instance.TestSudokuSolver();
+            instance.TestUniquenessCheck();
+            instance.TestSudokuGeneratorPerformance();
+
+            TraceOut.Leave();
+        }
+
+        #endregion Main
+
+        #region Methods
+
+        public void TestSudokuSolver()
+        {
+            TraceOut.WriteInformation("==========================");
+            TraceOut.WriteInformation("    Sudoku Solver Test");
+            TraceOut.WriteInformation("==========================");
+            TraceOut.WriteInformation("easy sudoku (average time)");
+
+            DateTime start = DateTime.Now;
+            var sudoku = getEasyTestSudoku();
+            var solution = new SudokuSolver().SolveSudoku(sudoku);
+            DateTime end = DateTime.Now;
+            
             TraceOut.WriteInformation("\r\n" + sudoku.ToString());
             TraceOut.WriteInformation("\r\n" + solution?.ToString());
+            TraceOut.WriteInformation($"solving sudoku took { (end - start).TotalMilliseconds }ms");
+            //TraceOut.WriteInformation("==========================");
+            //TraceOut.WriteInformation("difficuly sudoku (long time)");
 
+            //start = DateTime.Now;
+            //sudoku = getDifficultTestSudoku();
+            //solution = new SudokuSolver().SolveSudoku(sudoku);
+            //end = DateTime.Now;
+
+            //TraceOut.WriteInformation("\r\n" + sudoku.ToString());
+            //TraceOut.WriteInformation("\r\n" + solution?.ToString());
+            //TraceOut.WriteInformation($"solving sudoku took { (end - start).TotalMilliseconds }ms");
+            TraceOut.WriteInformation("");
+        }
+
+        public void TestUniquenessCheck()
+        {
+            TraceOut.WriteInformation("==========================");
+            TraceOut.WriteInformation("    Uniqueness Test");
+            TraceOut.WriteInformation("==========================");
+
+            DateTime start = DateTime.Now;
+            var sudoku = getEasyTestSudoku();
             var isUnique = new SudokuSolver().HasSudokuUniqueSolution(sudoku);
             TraceOut.WriteInformation(isUnique.ToString());
+            DateTime end = DateTime.Now;
+
+            TraceOut.WriteInformation($"solving sudoku took { (end - start).TotalMilliseconds }ms");
+
+            //start = DateTime.Now;
+            //sudoku = getDifficultTestSudoku();
+            //isUnique = new SudokuSolver().HasSudokuUniqueSolution(sudoku);
+            //TraceOut.WriteInformation(isUnique.ToString());
+            //end = DateTime.Now;
+
+            //TraceOut.WriteInformation($"solving sudoku took { (end - start).TotalMilliseconds }ms");
+            TraceOut.WriteInformation("");
+        }
+
+        public void TestSudokuGeneratorPerformance()
+        {
+            TraceOut.WriteInformation("==========================");
+            TraceOut.WriteInformation("Generator Performance Test");
+            TraceOut.WriteInformation("==========================");
+
+            DateTime start = DateTime.Now;
 
             // generate 100 sudokus, check if they have a unique solution and find out the solution
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var genSudoku = new SudokuGenerator().GenerateSudoku(SudokuDifficuty.Extreme);
                 TraceOut.WriteInformation("\r\n" + genSudoku.ToString());
@@ -33,10 +95,18 @@ namespace Sudoku.Solver.Test
                 TraceOut.WriteInformation("\r\n" + new SudokuSolver().SolveSudoku(genSudoku));
             }
 
-            TraceOut.Leave();
+            DateTime end = DateTime.Now;
+
+            TraceOut.WriteInformation("");
+            TraceOut.WriteInformation($"generating 1000 sudokus took { (end - start).TotalSeconds }s");
+            TraceOut.WriteInformation("");
         }
 
-        private static Sudoku getTestSudoku()
+        #endregion Methods
+
+        #region Sudokus
+
+        private static Sudoku getEasyTestSudoku()
         {
             var sudoku = new Sudoku();
 
@@ -68,68 +138,31 @@ namespace Sudoku.Solver.Test
             return sudoku;
         }
 
-        //private static Sudoku getTestSudoku()
-        //{
-        //    var sudoku = new Sudoku();
+        private static Sudoku getDifficultTestSudoku()
+        {
+            var sudoku = new Sudoku();
 
-        //    sudoku.Fields[0, 3].SetValue(5);
-        //    sudoku.Fields[0, 4].SetValue(4);
-        //    sudoku.Fields[0, 5].SetValue(6);
-        //    sudoku.Fields[0, 8].SetValue(9);
-        //    sudoku.Fields[1, 1].SetValue(2);
-        //    sudoku.Fields[1, 8].SetValue(7);
-        //    sudoku.Fields[2, 2].SetValue(3);
-        //    sudoku.Fields[2, 3].SetValue(9);
-        //    sudoku.Fields[2, 8].SetValue(4);
-        //    sudoku.Fields[3, 0].SetValue(9);
-        //    sudoku.Fields[3, 2].SetValue(5);
-        //    sudoku.Fields[3, 7].SetValue(7);
-        //    sudoku.Fields[4, 0].SetValue(7);
-        //    sudoku.Fields[4, 7].SetValue(2);
-        //    sudoku.Fields[5, 4].SetValue(9);
-        //    sudoku.Fields[5, 5].SetValue(3);
-        //    sudoku.Fields[6, 1].SetValue(5);
-        //    sudoku.Fields[6, 2].SetValue(6);
-        //    sudoku.Fields[6, 5].SetValue(8);
-        //    sudoku.Fields[7, 1].SetValue(1);
-        //    sudoku.Fields[7, 4].SetValue(3);
-        //    sudoku.Fields[7, 5].SetValue(9);
-        //    sudoku.Fields[8, 6].SetValue(8);
-        //    sudoku.Fields[8, 8].SetValue(6);
+            sudoku.Fields[1, 5].SetValue(3);
+            sudoku.Fields[1, 7].SetValue(8);
+            sudoku.Fields[1, 8].SetValue(5);
+            sudoku.Fields[2, 2].SetValue(1);
+            sudoku.Fields[2, 4].SetValue(2);
+            sudoku.Fields[3, 3].SetValue(5);
+            sudoku.Fields[3, 5].SetValue(7);
+            sudoku.Fields[4, 2].SetValue(4);
+            sudoku.Fields[4, 6].SetValue(1);
+            sudoku.Fields[5, 1].SetValue(9);
+            sudoku.Fields[6, 0].SetValue(5);
+            sudoku.Fields[6, 7].SetValue(7);
+            sudoku.Fields[6, 8].SetValue(3);
+            sudoku.Fields[7, 2].SetValue(2);
+            sudoku.Fields[7, 4].SetValue(1);
+            sudoku.Fields[8, 4].SetValue(4);
+            sudoku.Fields[8, 8].SetValue(9);
 
-        //    return sudoku;
-        //}
+            return sudoku;
+        }
 
-        //private static Sudoku getTestSudoku()
-        //{
-        //    // unfulfillable
-        //    var sudoku = new Sudoku();
-
-        //    sudoku.Fields[0, 2].SetValue(5);
-        //    sudoku.Fields[0, 8].SetValue(9);
-        //    sudoku.Fields[1, 3].SetValue(7);
-        //    sudoku.Fields[1, 4].SetValue(2);
-        //    sudoku.Fields[2, 7].SetValue(4);
-        //    sudoku.Fields[2, 8].SetValue(2);
-        //    sudoku.Fields[3, 0].SetValue(4);
-        //    sudoku.Fields[3, 6].SetValue(2);
-        //    sudoku.Fields[3, 7].SetValue(7);
-        //    sudoku.Fields[4, 0].SetValue(2);
-        //    sudoku.Fields[4, 2].SetValue(6);
-        //    sudoku.Fields[4, 6].SetValue(8);
-        //    sudoku.Fields[4, 7].SetValue(9);
-        //    sudoku.Fields[5, 3].SetValue(2);
-        //    sudoku.Fields[5, 4].SetValue(6);
-        //    sudoku.Fields[6, 1].SetValue(1);
-        //    sudoku.Fields[6, 5].SetValue(5);
-        //    sudoku.Fields[7, 1].SetValue(6);
-        //    sudoku.Fields[7, 4].SetValue(7);
-        //    sudoku.Fields[7, 5].SetValue(8);
-        //    sudoku.Fields[8, 1].SetValue(8);
-        //    sudoku.Fields[8, 3].SetValue(6);
-        //    sudoku.Fields[8, 8].SetValue(5);
-
-        //    return sudoku;
-        //}
+        #endregion Sudokus
     }
 }

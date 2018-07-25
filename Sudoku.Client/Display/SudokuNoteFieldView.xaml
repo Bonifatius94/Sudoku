@@ -5,9 +5,245 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Sudoku.UI.Display"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    
+             d:DesignHeight="30" d:DesignWidth="30">
+
+    <UserControl.Resources>
+        <ControlTemplate x:Key="NoteTextBox">
+            <TextBox 
+                Text="{Binding Note_0_0, UpdateSourceTrigger=PropertyChanged}"
+                VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+                Height="30" Foreground="{Binding FontColor}">
+                <TextBox.InputBindings>
+                    <!-- set number -->
+                    <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                    <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                    <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                    <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                    <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                    <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                    <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                    <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                    <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                    <!-- delete value -->
+                    <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                    <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                    <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+                </TextBox.InputBindings>
+            </TextBox>
+        </ControlTemplate>
+    </UserControl.Resources>
+
     <UniformGrid>
-        <TextBlock />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_0_0}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_0_1}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_0_2}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_1_0}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_1_1}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_1_2}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_2_0}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_2_1}" />
+        <ItemsControl Template="{StaticResource NoteTextBox}" DataContext="{Binding Note_2_2}" />
     </UniformGrid>
+    
+    <!--<UniformGrid>
+        <TextBox 
+            Text="{Binding Note_0_0, UpdateSourceTrigger=PropertyChanged}"
+            VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+            Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_0_1, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_0_2, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_1_0, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_1_1, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_1_2, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_2_0, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_2_1, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <TextBox 
+        Text="{Binding Note_2_2, UpdateSourceTrigger=PropertyChanged}"
+        VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
+        FontSize="20" Width="30" Height="30" Foreground="{Binding FontColor}">
+            <TextBox.InputBindings>
+                --><!-- set number --><!--
+                <KeyBinding Key="D1"      Command="{Binding KeyPressed_1}"   />
+                <KeyBinding Key="D2"      Command="{Binding KeyPressed_2}"   />
+                <KeyBinding Key="D3"      Command="{Binding KeyPressed_3}"   />
+                <KeyBinding Key="D4"      Command="{Binding KeyPressed_4}"   />
+                <KeyBinding Key="D5"      Command="{Binding KeyPressed_5}"   />
+                <KeyBinding Key="D6"      Command="{Binding KeyPressed_6}"   />
+                <KeyBinding Key="D7"      Command="{Binding KeyPressed_7}"   />
+                <KeyBinding Key="D8"      Command="{Binding KeyPressed_8}"   />
+                <KeyBinding Key="D9"      Command="{Binding KeyPressed_9}"   />
+
+                --><!-- delete value --><!--
+                <KeyBinding Key="D0"        Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Delete"    Command="{Binding KeyPressed_Del}" />
+                <KeyBinding Key="Backspace" Command="{Binding KeyPressed_Del}" />
+            </TextBox.InputBindings>
+        </TextBox>
+    </UniformGrid>-->
 </UserControl>

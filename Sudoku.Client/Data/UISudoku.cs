@@ -6,25 +6,26 @@ using System.Threading.Tasks;
 
 namespace Sudoku.UI.Data
 {
-    public class UISudoku : Solver.Sudoku
+    public class UISudoku : Algorithms.Sudoku
     {
         #region Constructor
 
         public UISudoku(score score) : base(score.Convert()) { }
         public UISudoku(int length = 9) : base(length) { }
-        public UISudoku(Solver.Sudoku original) { initValues(original); }
+        public UISudoku(Algorithms.Sudoku original) { initValues(original); }
 
         #endregion Constructor
 
         #region Members
 
         public bool[,] IsFix { get; set; } = new bool[9, 9];
+        private Stack<SudokuAction> _actions = new Stack<SudokuAction>();
 
         #endregion Members
 
         #region Methods
 
-        private void initValues(Solver.Sudoku original)
+        private void initValues(Algorithms.Sudoku original)
         {
             for (int row = 0; row < 9; row++)
             {
@@ -35,10 +36,22 @@ namespace Sudoku.UI.Data
             }
         }
 
+        public void AddNewAction(SudokuAction action)
+        {
+            _actions.Push(action);
+        }
+
+        public void RevertLastAction()
+        {
+            var lastAction = _actions.Pop();
+
+
+        }
+
         #endregion Methods
     }
 
-    public class UIField : Solver.Field
+    public class UIField : Algorithms.Field
     {
         #region Constructor
 

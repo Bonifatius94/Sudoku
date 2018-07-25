@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sudoku.Solver
+namespace Sudoku.Algorithms
 {
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Sudoku : FieldCollection2D, ICloneable
@@ -78,7 +79,7 @@ namespace Sudoku.Solver
 
         public bool IsSolved()
         {
-            return (GetSolvedFieldsCount() == _length * _length);
+            return GetFreeFields().Count == 0 && IsValid();
         }
 
         public void EliminatePossibilities()
@@ -108,6 +109,11 @@ namespace Sudoku.Solver
             }
 
             return count;
+        }
+
+        public List<Field> GetFreeFields()
+        {
+            return GetFields1D().Where(x => x.Value == 0).ToList();
         }
 
         public object Clone()

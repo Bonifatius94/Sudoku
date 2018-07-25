@@ -7,8 +7,8 @@
     <ProjectGuid>{0769E43C-0EF9-4DEC-A700-E2A878093EC4}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sudoku.Solver.Test</RootNamespace>
-    <AssemblyName>Sudoku.Solver.Test</AssemblyName>
+    <RootNamespace>Sudoku.Algorithms.Test</RootNamespace>
+    <AssemblyName>Sudoku.Algorithms.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -53,9 +53,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sudoku.Solver\Sudoku.Solver.csproj">
+    <ProjectReference Include="..\Sudoku.Solver\Sudoku.Algorithms.csproj">
       <Project>{D92B0475-8ECF-4992-B3CE-351189DDF6CA}</Project>
-      <Name>Sudoku.Solver</Name>
+      <Name>Sudoku.Algorithms</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

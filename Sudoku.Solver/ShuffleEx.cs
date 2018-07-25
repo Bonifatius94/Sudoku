@@ -1,29 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sudoku.Solver
+namespace Sudoku.Algorithms
 {
     public static class ShuffleEx
     {
-        private static readonly Random rng = new Random();
+        private static readonly Random random = new Random();
 
         public static IList<T> Shuffle<T>(this IList<T> list)
         {
-            int n = list.Count;
-
-            while (n > 1)
+            for (int i = 0; i < list.Count - 1; i++)
             {
-                n--;
-                int k = rng.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
+                // get index to switch with
+                int k = random.Next(i, list.Count);
+
+                if (i != k)
+                {
+                    // switch list[k] <--> list[i]
+                    T value = list[k];
+                    list[k] = list[i];
+                    list[i] = value;
+                }
             }
 
             return list;
+        }
+
+        public static T ChooseRandom<T>(this IList<T> list)
+        {
+            if (list == null || list.Count == 0)
+            {
+                throw new ArgumentException("list must not be null or empty");
+            }
+
+            int index = random.Next(0, list.Count);
+            return list[index];
         }
     }
 }

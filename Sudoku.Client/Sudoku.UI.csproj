@@ -80,7 +80,9 @@
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Data\ScoreContext.cs" />
+    <Compile Include="Data\SudokuAction.cs" />
     <Compile Include="Data\UISudoku.cs" />
+    <Compile Include="Display\SudokuNoteFieldItemViewModel.cs" />
     <Compile Include="Display\SudokuSetFieldView.xaml.cs">
       <DependentUpon>SudokuSetFieldView.xaml</DependentUpon>
     </Compile>
@@ -154,10 +156,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sudoku.Solver\Sudoku.Solver.csproj">
+    <ProjectReference Include="..\Sudoku.Solver\Sudoku.Algorithms.csproj">
       <Project>{D92B0475-8ECF-4992-B3CE-351189DDF6CA}</Project>
-      <Name>Sudoku.Solver</Name>
+      <Name>Sudoku.Algorithms</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="README.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
