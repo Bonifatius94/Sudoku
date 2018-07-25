@@ -53,7 +53,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sudoku.Solver\Sudoku.Algorithms.csproj">
+    <ProjectReference Include="..\Sudoku.Algorithms\Sudoku.Algorithms.csproj">
       <Project>{D92B0475-8ECF-4992-B3CE-351189DDF6CA}</Project>
       <Name>Sudoku.Algorithms</Name>
     </ProjectReference>

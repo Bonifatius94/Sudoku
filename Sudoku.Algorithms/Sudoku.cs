@@ -98,18 +98,23 @@ namespace Sudoku.Algorithms
 
         public int GetSolvedFieldsCount()
         {
-            int count = 0;
-
-            for (int i = 0; i < _length; i++)
-            {
-                for (int j = 0; j < _length; j++)
-                {
-                    if (_fields[i, j].Value > 0) { count++; }
-                }
-            }
-
-            return count;
+            return GetFields1D().Where(x => x.Value > 0).Count();
         }
+
+        //public int GetSolvedFieldsCount()
+        //{
+        //    int count = 0;
+
+        //    for (int i = 0; i < _length; i++)
+        //    {
+        //        for (int j = 0; j < _length; j++)
+        //        {
+        //            if (_fields[i, j].Value > 0) { count++; }
+        //        }
+        //    }
+
+        //    return count;
+        //}
 
         public List<Field> GetFreeFields()
         {
