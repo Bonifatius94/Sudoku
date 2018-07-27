@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.UI", "Sudoku.UI\Sudo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.Algorithms", "Sudoku.Algorithms\Sudoku.Algorithms.csproj", "{D92B0475-8ECF-4992-B3CE-351189DDF6CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.Algorithms.Test", "Sudoku.Algorithms.Test\Sudoku.Algorithms.Test.csproj", "{0769E43C-0EF9-4DEC-A700-E2A878093EC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.UnitTests", "Sudoku.UnitTests\Sudoku.UnitTests.csproj", "{C3BF9F67-530C-4452-8A96-9F6962A864A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{D92B0475-8ECF-4992-B3CE-351189DDF6CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D92B0475-8ECF-4992-B3CE-351189DDF6CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D92B0475-8ECF-4992-B3CE-351189DDF6CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0769E43C-0EF9-4DEC-A700-E2A878093EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0769E43C-0EF9-4DEC-A700-E2A878093EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0769E43C-0EF9-4DEC-A700-E2A878093EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0769E43C-0EF9-4DEC-A700-E2A878093EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3BF9F67-530C-4452-8A96-9F6962A864A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3BF9F67-530C-4452-8A96-9F6962A864A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3BF9F67-530C-4452-8A96-9F6962A864A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3BF9F67-530C-4452-8A96-9F6962A864A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

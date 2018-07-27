@@ -75,10 +75,19 @@ namespace Sudoku.Algorithms
                 Column.EliminatePossibility(value);
                 Square.EliminatePossibility(value);
 
-                _possibilities = new bool[_maxPossibilities];
-                _possibilities[value - 1] = true;
+                for (int i = 0; i < _maxPossibilities; i++)
+                {
+                    _possibilities[i] = (i == value - 1);
+                }
             }
-            else if (value < 0)
+            else if (value == 0)
+            {
+                for (int i = 0; i < _maxPossibilities; i++)
+                {
+                    _possibilities[i] = true;
+                }
+            }
+            else
             {
                 throw new ArgumentException("Invalid value!");
             }

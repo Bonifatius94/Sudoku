@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sudoku.Algorithms
 {
@@ -7,34 +8,52 @@ namespace Sudoku.Algorithms
     {
         private static readonly Random random = new Random();
 
-        public static IList<T> Shuffle<T>(this IList<T> list)
+        public static List<T> Shuffle<T>(this IEnumerable<T> items)
         {
-            for (int i = 0; i < list.Count - 1; i++)
+            List<T> results = items.ToList();
+
+            for (int i = 0; i < results.Count - 1; i++)
             {
                 // get index to switch with
-                int k = random.Next(i, list.Count);
+                int k = random.Next(i, results.Count);
 
                 if (i != k)
                 {
-                    // switch list[k] <--> list[i]
-                    T value = list[k];
-                    list[k] = list[i];
-                    list[i] = value;
+                    // switch results[k] <--> results[i]
+                    T value = results[k];
+                    results[k] = results[i];
+                    results[i] = value;
                 }
             }
 
-            return list;
+            return results;
         }
 
-        public static T ChooseRandom<T>(this IList<T> list)
+        public static T ChooseRandom<T>(this IEnumerable<T> list)
         {
-            if (list == null || list.Count == 0)
+            int count = list != null ? Enumerable.Count(list) : 0;
+
+            if (count == 0)
             {
                 throw new ArgumentException("list must not be null or empty");
             }
 
-            int index = random.Next(0, list.Count);
-            return list[index];
+            int index = random.Next(0, count);
+            T item = Enumerable.ElementAt(list, index);
+
+            return item;
+        }
+
+        public static List<T> ChooseRandom<T>(this IEnumerable<T> list, int range)
+        {
+            int count = list != null ? Enumerable.Count(list) : 0;
+
+            if (count == 0)
+            {
+                throw new ArgumentException("list must not be null or empty");
+            }
+            
+            return list.Shuffle().Take(range > count ? count : range).ToList();
         }
     }
 }

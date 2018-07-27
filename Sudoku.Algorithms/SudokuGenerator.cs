@@ -4,6 +4,14 @@ using System.Linq;
 
 namespace Sudoku.Algorithms
 {
+    //public enum SudokuDifficuty
+    //{
+    //    Easy = 45,
+    //    Medium = 35,
+    //    Hard = 28,
+    //    Extreme = 20
+    //}
+
     public enum SudokuDifficuty
     {
         Easy = 45,
@@ -12,7 +20,7 @@ namespace Sudoku.Algorithms
         Extreme = 25
     }
 
-    public class SudokuGenerator
+    public class SudokuGenerator : ISudokuGenerator
     {
         #region Members
 
@@ -31,9 +39,7 @@ namespace Sudoku.Algorithms
             // reset several values (depending on desired difficulty)
             for (int i = 0; i < (length * length) - (int)difficulty; i++)
             {
-                var fields = sudoku.GetFields1D().Where(x => x.Value > 0).ToList();
-                int index = _random.Next(fields.Count);
-                var field = fields[index];
+                var field = sudoku.GetSetFields().ChooseRandom();
                 field.SetValue(0);
             }
             

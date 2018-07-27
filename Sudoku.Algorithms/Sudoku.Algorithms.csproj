@@ -47,6 +47,8 @@
     <Compile Include="Field.cs" />
     <Compile Include="FieldCollection1D.cs" />
     <Compile Include="FieldCollection2D.cs" />
+    <Compile Include="ISudokuGenerator.cs" />
+    <Compile Include="ISudokuSolver.cs" />
     <Compile Include="ISudokuSubcollection.cs" />
     <Compile Include="Row.cs" />
     <Compile Include="ShuffleEx.cs" />
@@ -54,7 +56,9 @@
     <Compile Include="Sudoku.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SudokuGenerator.cs" />
+    <Compile Include="SudokuGenerator_v2.cs" />
     <Compile Include="SudokuSolver.cs" />
+    <Compile Include="SudokuSolver_v2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

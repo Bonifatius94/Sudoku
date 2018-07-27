@@ -121,6 +121,11 @@ namespace Sudoku.Algorithms
             return GetFields1D().Where(x => x.Value == 0).ToList();
         }
 
+        public List<Field> GetSetFields()
+        {
+            return GetFields1D().Where(x => x.Value > 0).ToList();
+        }
+
         public object Clone()
         {
             var fields = new Field[_length, _length];
