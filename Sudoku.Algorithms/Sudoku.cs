@@ -5,9 +5,7 @@ using System.Text;
 
 namespace Sudoku.Algorithms
 {
-#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Sudoku : FieldCollection2D, ICloneable
-#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Constructor
 
@@ -18,8 +16,8 @@ namespace Sudoku.Algorithms
 
         #region Members
 
-        private Square[,] _squares;
-        public Square[,] Squares { get { return _squares; } }
+        private FieldCollection2D[,] _squares;
+        public FieldCollection2D[,] Squares { get { return _squares; } }
         
         #endregion Members
 
@@ -27,21 +25,21 @@ namespace Sudoku.Algorithms
 
         private void initSudoku()
         {
-            int length = (int)Math.Sqrt(_length);
-            _squares = new Square[length, length];
+            int squareLength = (int)Math.Sqrt(_length);
+            _squares = new FieldCollection2D[squareLength, squareLength];
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < squareLength; i++)
             {
-                for (int j = 0; j < length; j++)
+                for (int j = 0; j < squareLength; j++)
                 {
-                    _squares[i, j] = new Square();
+                    _squares[i, j] = new FieldCollection2D(squareLength);
 
-                    for (int k = 0; k < length; k++)
+                    for (int k = 0; k < squareLength; k++)
                     {
-                        for (int l = 0; l < length; l++)
+                        for (int l = 0; l < squareLength; l++)
                         {
-                            int rowIndex = i * length + k;
-                            int columnIndex = j * length + l;
+                            int rowIndex = i * squareLength + k;
+                            int columnIndex = j * squareLength + l;
 
                             var field = _fields[rowIndex, columnIndex];
                             _squares[i, j].Fields[k, l] = field;
@@ -60,21 +58,7 @@ namespace Sudoku.Algorithms
 
         public bool IsValid()
         {
-            bool ret = true;
-
-            for (int i = 0; i < _length; i++)
-            {
-                for (int j = 0; j < _length; j++)
-                {
-                    if (_fields[i, j].GetPossibleValuesCount() == 0)
-                    {
-                        ret = false;
-                        break;
-                    }
-                }
-            }
-
-            return ret;
+            return GetFields1D().Any(x => x.GetPossibleValuesCount() == 0);
         }
 
         public bool IsSolved()
@@ -84,38 +68,22 @@ namespace Sudoku.Algorithms
 
         public void EliminatePossibilities()
         {
-            int solvedFields = GetSolvedFieldsCount();
-            int newSolvedFields = solvedFields;
+            int diff = 0;
 
             do
             {
-                solvedFields = newSolvedFields;
+                int tempSolvedFields = GetSolvedFieldsCount();
                 GetFields1D().ToList().ForEach(x => x.SetValueIfDetermined());
-                newSolvedFields = GetSolvedFieldsCount();
+                diff = GetSolvedFieldsCount() - tempSolvedFields;
             }
-            while (newSolvedFields > solvedFields);
+            while (diff > 0);
         }
 
         public int GetSolvedFieldsCount()
         {
             return GetFields1D().Where(x => x.Value > 0).Count();
         }
-
-        //public int GetSolvedFieldsCount()
-        //{
-        //    int count = 0;
-
-        //    for (int i = 0; i < _length; i++)
-        //    {
-        //        for (int j = 0; j < _length; j++)
-        //        {
-        //            if (_fields[i, j].Value > 0) { count++; }
-        //        }
-        //    }
-
-        //    return count;
-        //}
-
+        
         public List<Field> GetFreeFields()
         {
             return GetFields1D().Where(x => x.Value == 0).ToList();
@@ -128,39 +96,53 @@ namespace Sudoku.Algorithms
 
         public object Clone()
         {
+            // clone all fields and apply them to a new sudoku
             var fields = new Field[_length, _length];
-            
-            for (int i = 0; i < _length; i++)
-            {
-                for (int j = 0; j < _length; j++)
-                {
-                    fields[i, j] = (Field)_fields[i, j].Clone();
-                }
-            }
-
+            GetFields1D().ToList().ForEach(x => fields[x.RowIndex, x.ColumnIndex] = (Field)x.Clone());
             var ret = new Sudoku(fields);
+
             return ret;
         }
         
+        public override bool Equals(object obj)
+        {
+            var sudoku = obj as Sudoku;
+            bool ret = false;
+
+            if (sudoku != null)
+            {
+                // check if all possibilities are equal or not
+                ret = sudoku.GetFields1D().All(x => x.Possibilities.SequenceEqual(_fields[x.RowIndex, x.ColumnIndex].Possibilities));
+            }
+
+            return ret;
+        }
+
+        public override int GetHashCode()
+        {
+            // this enforces the Equals() function for types like HashSet, Dictionary, etc.
+            return 0;
+        }
+
         public override string ToString()
         {
             var builder = new StringBuilder();
-            int square = (int)Math.Sqrt(_length);
+            int squareLength = (int)Math.Sqrt(_length);
 
             const string SEPARATOR = "+-------+-------+-------+";
             builder.AppendLine(SEPARATOR);
 
-            for (int i = 0; i < square; i++)
+            for (int i = 0; i < squareLength; i++)
             {
-                for (int j = 0; j < square; j++)
+                for (int j = 0; j < squareLength; j++)
                 {
                     builder.Append("|");
 
-                    for (int k = 0; k < square; k++)
+                    for (int k = 0; k < squareLength; k++)
                     {
-                        for (int l = 0; l < square; l++)
+                        for (int l = 0; l < squareLength; l++)
                         {
-                            builder.Append($" { _fields[i * square + j, k * square + l].Value }");
+                            builder.Append($" { _fields[i * squareLength + j, k * squareLength + l].Value }");
                         }
 
                         builder.Append(" |");
@@ -174,31 +156,6 @@ namespace Sudoku.Algorithms
 
             builder.Remove(builder.Length - 2, 2);
             return builder.ToString();
-        }
-
-        public override bool Equals(object obj)
-        {
-            var sudoku = obj as Sudoku;
-
-            if (sudoku != null)
-            {
-                for (int i = 0; i < _length; i++)
-                {
-                    for (int j = 0; j < _length; j++)
-                    {
-                        if (Fields[i, j].Value != sudoku.Fields[i, j].Value) { return false; }
-
-                        for (int k = 0; k < _length; k++)
-                        {
-                            if (Fields[i, j].Possibilities[k] != sudoku.Fields[i, j].Possibilities[k]) { return false; }
-                        }
-                    }
-                }
-
-                return true;
-            }
-
-            return false;
         }
 
         #endregion Methods

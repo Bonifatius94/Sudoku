@@ -11,7 +11,7 @@ namespace Sudoku.Algorithms
         int[] GetPossibleValues();
         void EliminatePossibility(int value);
 
-        void PrintValues();
+        //void PrintValues();
         void PrintPossibilities();
     }
 }

@@ -56,9 +56,9 @@ namespace Sudoku.Algorithms
         /// </summary>
         public bool[] Possibilities { get { return _possibilities; } }
 
-        public Row Row { get; set; }
-        public Column Column { get; set; }
-        public Square Square { get; set; }
+        public FieldCollection1D Row { get; set; }
+        public FieldCollection1D Column { get; set; }
+        public FieldCollection2D Square { get; set; }
 
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }
@@ -95,9 +95,11 @@ namespace Sudoku.Algorithms
 
         public void SetValueIfDetermined()
         {
-            if (GetPossibleValuesCount() == 1)
+            var possibleValues = GetPossibleValues();
+
+            if (possibleValues.Length == 1)
             {
-                SetValue(GetPossibleValues()[0]);
+                SetValue(possibleValues[0]);
             }
         }
 
@@ -112,10 +114,10 @@ namespace Sudoku.Algorithms
             return _possibilities.Where(x => x).Count();
         }
 
-        public bool HasError()
-        {
-            return (GetPossibleValuesCount() == 0);
-        }
+        //public bool HasError()
+        //{
+        //    return (GetPossibleValuesCount() == 0);
+        //}
 
         public object Clone()
         {

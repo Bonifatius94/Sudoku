@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Sudoku.Algorithms
 {
-    public class Column : FieldCollection1D
-    {
-        #region Constructor
+    //public class Column : FieldCollection1D
+    //{
+    //    #region Constructor
 
-        public Column(Field[] fields) : base(fields) { }
-        public Column(int length = 9) : base(length) { }
+    //    public Column(Field[] fields) : base(fields) { }
+    //    public Column(int length = 9) : base(length) { }
 
-        #endregion Constructor
-    }
+    //    #endregion Constructor
+    //}
 }

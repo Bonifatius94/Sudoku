@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sudoku.Algorithms
 {
-    public abstract class FieldCollection1D : ISudokuSubcollection
+    public class FieldCollection1D : ISudokuSubcollection
     {
         #region Constructor
 

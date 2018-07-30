@@ -4,21 +4,20 @@ using System.Text;
 
 namespace Sudoku.Algorithms
 {
-    public abstract class FieldCollection2D : ISudokuSubcollection
+    public class FieldCollection2D : ISudokuSubcollection
     {
         #region Constructor
 
         public FieldCollection2D(int length)
         {
-            // runs in constant time
             _length = length;
             _fields = new Field[_length, _length];
 
-            for (int i = 0; i < _length; i++)
+            for (int row = 0; row < _length; row++)
             {
-                for (int j = 0; j < _length; j++)
+                for (int column = 0; column < _length; column++)
                 {
-                    _fields[i, j] = new Field();
+                    _fields[row, column] = new Field();
                 }
             }
 
@@ -27,7 +26,6 @@ namespace Sudoku.Algorithms
 
         public FieldCollection2D(Field[,] fields)
         {
-            // runs in constant time
             _fields = fields;
             _length = (int)Math.Sqrt(_fields.Length);
             init();
@@ -43,11 +41,11 @@ namespace Sudoku.Algorithms
         protected Field[,] _fields;
         public Field[,] Fields { get { return _fields; } }
 
-        protected Row[] _rows;
-        public Row[] Rows { get { return _rows; } }
+        protected FieldCollection1D[] _rows;
+        public FieldCollection1D[] Rows { get { return _rows; } }
 
-        protected Column[] _columns;
-        public Column[] Columns { get { return _columns; } }
+        protected FieldCollection1D[] _columns;
+        public FieldCollection1D[] Columns { get { return _columns; } }
 
         #endregion Members
 
@@ -55,35 +53,34 @@ namespace Sudoku.Algorithms
 
         private void init()
         {
-            _rows = new Row[_length];
-            _columns = new Column[_length];
+            _rows = new FieldCollection1D[_length];
+            _columns = new FieldCollection1D[_length];
 
             for (int i = 0; i < _length; i++)
             {
-                _rows[i] = new Row();
-                _columns[i] = new Column();
+                _rows[i] = new FieldCollection1D(_length);
+                _columns[i] = new FieldCollection1D(_length);
             }
-
-            for (int i = 0; i < _length; i++)
+            
+            for (int row = 0; row < _length; row++)
             {
-                for (int j = 0; j < _length; j++)
+                for (int column = 0; column < _length; column++)
                 {
-                    _rows[i].Fields[j] = _fields[i, j];
-                    _columns[j].Fields[i] = _fields[i, j];
+                    _rows[row].Fields[column] = _fields[row, column];
+                    _columns[column].Fields[row] = _fields[row, column];
                 }
             }
         }
 
         public Field[] GetFields1D()
         {
-            // runs in constant time
             var fields = new Field[_length * _length];
 
-            for (int i = 0; i < _length; i++)
+            for (int row = 0; row < _length; row++)
             {
-                for (int j = 0; j < _length; j++)
+                for (int column = 0; column < _length; column++)
                 {
-                    fields[i * _length + j] = _fields[i, j];
+                    fields[row * _length + column] = _fields[row, column];
                 }
             }
 
@@ -113,10 +110,10 @@ namespace Sudoku.Algorithms
             return builder.ToString();
         }
 
-        public void PrintValues()
-        {
-            Console.WriteLine(this.ToString());
-        }
+        //public void PrintValues()
+        //{
+        //    Console.WriteLine(this.ToString());
+        //}
 
         public void PrintPossibilities()
         {
