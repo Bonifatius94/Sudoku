@@ -26,6 +26,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -40,15 +42,21 @@
             <RadioButton IsChecked="{Binding IsChecked_Manual}" Content="manual" VerticalContentAlignment="Center" />
         </StackPanel>
 
-        <display:SudokuView DataContext="{Binding Sudoku}" Grid.Row="2" Grid.Column="1" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="3">
+            <TextBlock Text="Input mode:" Margin="0,0,10,0" />
+            <RadioButton IsChecked="{Binding InputMode_Determined}" Content="determ." Margin="0,0,10,0" VerticalContentAlignment="Center" />
+            <RadioButton IsChecked="{Binding InputMode_Notes}" Content="note" VerticalContentAlignment="Center" />
+        </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="4" Grid.ColumnSpan="3">
+        <display:SudokuView DataContext="{Binding Sudoku}" Grid.Row="4" Grid.Column="1" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="3">
             <Button cal:Message.Attach="GenerateSudoku" Content="Generate" MinWidth="70" Margin="0,0,10,0" />
             <Button cal:Message.Attach="ClearSudoku" Content="Clear" MinWidth="70" Margin="0,0,10,0" />
             <Button cal:Message.Attach="SolveSudoku" Content="Solve" MinWidth="70" />
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="3">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="8" Grid.ColumnSpan="3">
             <TextBlock Text="Difficulty level:" VerticalAlignment="Center" Margin="0,0,10,0" />
             <ComboBox ItemsSource="{Binding Difficulties}" SelectedItem="{Binding SelectedDifficulty}" Grid.Row="6" Grid.ColumnSpan="3" MinWidth="75" />
         </StackPanel>

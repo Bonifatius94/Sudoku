@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using MT.Tools.Tracing;
+using Sudoku.Data;
 using Sudoku.UI.Data;
 
 namespace Sudoku.UI.Display
@@ -47,26 +48,42 @@ namespace Sudoku.UI.Display
 
             var score = new ScoreSudokuPuzzle();
 
-            for (int i = 0; i < 3; i++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int column = 0; column < 9; column++)
                 {
-                    for (int k = 0; k < 3; k++)
+                    // TODO: check if values are correct
+                    int i = row / 3;
+                    int j = row % 3;
+                    int k = column / 3;
+                    int l = column % 3;
+                    
+                    var fieldSwitch = _boxes[i, j].Fields[k, l] as SudokuFieldViewModel;
+
+                    if (fieldSwitch.Mode == SudokuInputMode.Determined)
                     {
-                        for (int l = 0; l < 3; l++)
+                        var field = fieldSwitch.DeterminedView;
+
+                        score.fields.Add(new ScoreSudokuField()
                         {
-                            int row = i * 3 + k;
-                            int column = j * 3 + l;
+                            row = row,
+                            column = column,
+                            isFix = field.IsFix,
+                            value = field.GetValue()
+                        });
+                    }
+                    else // if (fieldViewModel.Mode == SudokuFieldMode.Notes)
+                    {
+                        var field = fieldSwitch.NotesView;
 
-                            if ()
-
-                            score.fields.Add(new ScoreSudokuField() {
-                                row = row, column = column, 
-                            });
-
-                            //sudoku.Fields[i * 3 + k, j * 3 + l].SetValue(_boxes[i, j].Fields[k, l].GetValue());
-                            //sudoku.IsFix[i * 3 + k, j * 3 + l] = _boxes[i, j].Fields[k, l].IsFix;
-                        }
+                        score.fields.Add(new ScoreSudokuField()
+                        {
+                            row = row,
+                            column = column,
+                            isFix = false,
+                            value = 0,
+                            possibilities = field.GetPossibilities()
+                        });
                     }
                 }
             }
@@ -75,22 +92,23 @@ namespace Sudoku.UI.Display
             return score;
         }
 
-        public void ApplySudoku(UISudoku sudoku)
+        public void ApplySudoku(ScoreSudokuPuzzle sudoku)
         {
             TraceOut.Enter();
 
-            for (int i = 0; i < 3; i++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int column = 0; column < 9; column++)
                 {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        for (int l = 0; l < 3; l++)
-                        {
-                            _boxes[i, j].Fields[k, l].SetValue(sudoku.Fields[i * 3 + k, j * 3 + l].Value);
-                            _boxes[i, j].Fields[k, l].IsFix = sudoku.IsFix[i * 3 + k, j * 3 + l];
-                        }
-                    }
+                    // TODO: check if values are correct
+                    int i = row / 3;
+                    int j = row % 3;
+                    int k = column / 3;
+                    int l = column % 3;
+
+                    var field = _boxes[i, j].Fields[k, l].DeterminedView;
+                    field.SetValue(sudoku.fields[row * 9 + column].value);
+                    field.IsFix = sudoku.fields[row * 9 + column].isFix;
                 }
             }
 
@@ -101,18 +119,19 @@ namespace Sudoku.UI.Display
         {
             TraceOut.Enter();
 
-            for (int i = 0; i < 3; i++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int column = 0; column < 9; column++)
                 {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        for (int l = 0; l < 3; l++)
-                        {
-                            _boxes[i, j].Fields[k, l].IsFix = false;
-                            _boxes[i, j].Fields[k, l].SetValue(0);
-                        }
-                    }
+                    // TODO: check if values are correct
+                    int i = row / 3;
+                    int j = row % 3;
+                    int k = column / 3;
+                    int l = column % 3;
+
+                    var field = _boxes[i, j].Fields[k, l].DeterminedView;
+                    field.SetValue(0);
+                    field.IsFix = false;
                 }
             }
 
@@ -123,18 +142,18 @@ namespace Sudoku.UI.Display
         {
             TraceOut.Enter();
 
-            for (int i = 0; i < 3; i++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int column = 0; column < 9; column++)
                 {
-                    for (int k = 0; k < 3; k++)
-                    {
-                        for (int l = 0; l < 3; l++)
-                        {
-                            var field = _boxes[i, j].Fields[k, l];
-                            field.IsFix = (field.GetValue() != 0);
-                        }
-                    }
+                    // TODO: check if values are correct
+                    int i = row / 3;
+                    int j = row % 3;
+                    int k = column / 3;
+                    int l = column % 3;
+
+                    var field = _boxes[i, j].Fields[k, l].DeterminedView;
+                    field.IsFix = (field.GetValue() != 0);
                 }
             }
 

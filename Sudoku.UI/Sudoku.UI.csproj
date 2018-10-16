@@ -79,6 +79,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="AppComponents.cs" />
     <Compile Include="Data\ScoreContext.cs" />
     <Compile Include="Data\ScoreHistory.cs" />
     <Compile Include="Data\ScoreSudokuField.cs" />
@@ -87,6 +88,7 @@
       <DependentUpon>SudokuFieldView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Display\SudokuFieldViewModel.cs" />
+    <Compile Include="Display\SudokuFieldViewModelBase.cs" />
     <Compile Include="Display\SudokuNoteFieldItemViewModel.cs" />
     <Compile Include="Display\SudokuSetFieldView.xaml.cs">
       <DependentUpon>SudokuSetFieldView.xaml</DependentUpon>
@@ -105,7 +107,6 @@
       <DependentUpon>SudokuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\DelegateCommand.cs" />
-    <Compile Include="Helper\SelectionBindingTextBox.cs" />
     <Compile Include="IShell.cs" />
     <Page Include="Display\SudokuFieldView.xaml">
       <SubType>Designer</SubType>

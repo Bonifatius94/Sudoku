@@ -16,15 +16,20 @@ namespace Sudoku.UI.Main
         Automatic,
         Manual
     }
-
+    
     public class MainViewModel : Screen, IShell
     {
         #region Constructor
 
         public MainViewModel()
         {
+            AppComponents.Main = this;
             DisplayName = "Sudoku Solver v1.0";
-            _sudokuView.ApplySudoku(SudokuScoreSettings.Instance.Score.historyAsList.Peek());
+
+            if (SudokuScoreSettings.Instance.Score.History?.Count > 0)
+            {
+                _sudokuView.ApplySudoku(SudokuScoreSettings.Instance.Score.History.Peek());
+            }
         }
 
         #endregion Constructor
@@ -33,9 +38,50 @@ namespace Sudoku.UI.Main
         
         private SudokuViewModel _sudokuView = new SudokuViewModel();
         public SudokuViewModel Sudoku { get { return _sudokuView; } }
-        
-        private bool _isGeneratorRunning = false;
 
+        //private ScoreHistory _history = new ScoreHistory();
+        //public ScoreHistory History { get { return _history; } }
+
+        private ScoreSudokuPuzzle _solution = new ScoreSudokuPuzzle();
+
+        #region InputMode
+
+        private SudokuInputMode _inputMode = SudokuInputMode.Determined;
+
+        public bool InputMode_Determined
+        {
+            get { return _inputMode == SudokuInputMode.Determined; }
+            set
+            {
+                if (value)
+                {
+                    _inputMode = SudokuInputMode.Determined;
+                    NotifyOfPropertyChange(() => InputMode_Determined);
+                    NotifyOfPropertyChange(() => InputMode_Notes);
+                }
+            }
+        }
+
+        public bool InputMode_Notes
+        {
+            get { return _inputMode == SudokuInputMode.Notes; }
+            set
+            {
+                if (value)
+                {
+                    _inputMode = SudokuInputMode.Notes;
+                    NotifyOfPropertyChange(() => InputMode_Determined);
+                    NotifyOfPropertyChange(() => InputMode_Notes);
+                }
+            }
+        }
+
+        #endregion InputMode
+
+        #region GeneratorSettings
+
+        private bool _isGeneratorRunning = false;
+        
         #region CreationMode
 
         private SudokuCreationMode _creationMode = SudokuCreationMode.Manual;
@@ -96,6 +142,8 @@ namespace Sudoku.UI.Main
 
         #endregion Difficulty
 
+        #endregion GeneratorSettings
+
         #endregion Members
 
         #region Methods
@@ -110,16 +158,23 @@ namespace Sudoku.UI.Main
                 {
                     _isGeneratorRunning = true;
 
+                    // set creation mode to automatic
                     _creationMode = SudokuCreationMode.Automatic;
                     NotifyOfPropertyChange(() => IsChecked_Automatic);
                     NotifyOfPropertyChange(() => IsChecked_Manual);
 
-                    var sudoku = new UISudoku(new Algorithms.v2.SudokuGenerator().GenerateSudoku(_selectedDifficulty));
-                    _solution = new UISudoku(new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku));
-
+                    // create a new sudoku puzzle and solve it
+                    var sudoku = new Algorithms.v2.SudokuGenerator().GenerateSudoku(_selectedDifficulty);
+                    var sudokuAsScore = new ScoreSudokuPuzzle(sudoku);
+                    _solution = new ScoreSudokuPuzzle(new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku));
+                    
+                    // apply the sudoku to the view
                     _sudokuView.ClearSudoku();
-                    _sudokuView.ApplySudoku(sudoku);
+                    _sudokuView.ApplySudoku(sudokuAsScore);
                     _sudokuView.MarkSetFieldsAsFix();
+
+                    // apply the changes to the history
+                    ApplyChangesToHistory();
 
                     _isGeneratorRunning = false;
                 }
@@ -141,30 +196,58 @@ namespace Sudoku.UI.Main
         {
             TraceOut.Enter();
 
+            // get a solution for the sudoku if not already available
             if (_creationMode == SudokuCreationMode.Manual)
             {
                 var sudoku = _sudokuView.GetSudoku();
-                _solution = new UISudoku(new Algorithms.v1.SudokuSolver().SolveSudoku(sudoku) ?? sudoku);
+                _solution = new ScoreSudokuPuzzle(new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku.Deserialize()) ?? sudoku.Deserialize());
             }
 
-            _solution.IsFix = _sudokuView.GetSudoku().IsFix;
+            // check if this is still necessary
+            for (int row = 0; row < 9; row++)
+            {
+                for (int column = 0; column < 9; column++)
+                {
+                    var puzzle = _sudokuView.GetSudoku();
+                    _solution.fields[row * 9 + column].isFix = puzzle.fields[row * 9 + column].isFix;
+                }
+            }
+            
+            // apply the solution to the view
             _sudokuView.ApplySudoku(_solution);
             
             TraceOut.Leave();
         }
 
-        public override void CanClose(Action<bool> callback)
+        public void ApplyChangesToHistory()
         {
-            TraceOut.Enter();
-
-            // save score
-            SudokuScoreSettings.Sudoku = _sudokuView.GetSudoku();
-            SudokuScoreSettings.SaveData();
-
-            base.CanClose(callback);
-
-            TraceOut.Leave();
+            // TODO: implement saving in write-through mode if the app freezes
+            var currentState = _sudokuView.GetSudoku();
+            SudokuScoreSettings.Instance.Score.History.Push(currentState);
+            SudokuScoreSettings.Instance.SaveData();
         }
+
+        public void RevertRecentChanges()
+        {
+            // TODO: add revert button in UI that invokes this method
+            // TODO: implement saving in write-through mode if the app freezes
+            SudokuScoreSettings.Instance.Score.History.Pop();
+            var lastState = SudokuScoreSettings.Instance.Score.History.Peek();
+            SudokuScoreSettings.Instance.SaveData();
+        }
+
+        //public override void CanClose(Action<bool> callback)
+        //{
+        //    TraceOut.Enter();
+
+        //    // save score
+        //    SudokuScoreSettings.Instance.Score.History.Peek() = _sudokuView.GetSudoku();
+        //    SudokuScoreSettings.Instance.SaveData();
+
+        //    base.CanClose(callback);
+
+        //    TraceOut.Leave();
+        //}
 
         #endregion Methods
     }

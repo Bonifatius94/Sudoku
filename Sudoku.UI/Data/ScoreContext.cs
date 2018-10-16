@@ -26,26 +26,29 @@ namespace Sudoku.UI.Data
             }
         }
 
-        private SudokuScoreSettings() { LoadData(); }
+        private SudokuScoreSettings() { _score = LoadData(); }
 
         #endregion Singleton
 
         #region Members
 
         private static readonly string TEMP_SCORE_FILE = Path.Combine(Environment.ExpandEnvironmentVariables("%TEMP%"), "SudokuScore.xml");
-        public ScoreHistory Score { get; set; } = null;
+
+        private ScoreHistory _score = null;
+        public ScoreHistory Score { get { return _score; } }
 
         #endregion Members
 
         #region Methods
         
-        public void LoadData()
+        public ScoreHistory LoadData()
         {
             TraceOut.Enter();
-            
+
+            var score = new ScoreHistory();
+
             if (File.Exists(TEMP_SCORE_FILE))
             {
-                ScoreHistory score = null;
                 var serializer = new XmlSerializer(typeof(ScoreHistory));
 
                 using (var reader = new StreamReader(TEMP_SCORE_FILE))
@@ -55,17 +58,19 @@ namespace Sudoku.UI.Data
             }
 
             TraceOut.Leave();
+            return score;
         }
 
-        public void SaveData()
+        public void SaveData(ScoreHistory score = null)
         {
             TraceOut.Enter();
-            
+
+            _score = score ?? _score;
             var serializer = new XmlSerializer(typeof(ScoreHistory));
 
             using (var writer = new StreamWriter(TEMP_SCORE_FILE))
             {
-                serializer.Serialize(writer, Score);
+                serializer.Serialize(writer, _score);
             }
 
             TraceOut.Leave();

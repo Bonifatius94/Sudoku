@@ -12,11 +12,19 @@ namespace Sudoku.UI.Display
     {
         #region Members
 
-        public UIField Model { get; set; }
-
-        // TODO: add notes
-        //public string Value { get { return Model } }
+        public int Value { get; set; }
+        public bool IsSet { get; set; }
 
         #endregion Members
+
+        #region Methods
+
+        public void NotifyAll()
+        {
+            NotifyOfPropertyChange(() => Value);
+            NotifyOfPropertyChange(() => IsSet);
+        }
+
+        #endregion Methods
     }
 }
