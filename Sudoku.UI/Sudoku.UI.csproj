@@ -80,8 +80,13 @@
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Data\ScoreContext.cs" />
-    <Compile Include="Data\SudokuAction.cs" />
-    <Compile Include="Data\UISudoku.cs" />
+    <Compile Include="Data\ScoreHistory.cs" />
+    <Compile Include="Data\ScoreSudokuField.cs" />
+    <Compile Include="Data\ScoreSudokuPuzzle.cs" />
+    <Compile Include="Display\SudokuFieldView.xaml.cs">
+      <DependentUpon>SudokuFieldView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Display\SudokuFieldViewModel.cs" />
     <Compile Include="Display\SudokuNoteFieldItemViewModel.cs" />
     <Compile Include="Display\SudokuSetFieldView.xaml.cs">
       <DependentUpon>SudokuSetFieldView.xaml</DependentUpon>
@@ -102,6 +107,10 @@
     <Compile Include="Helper\DelegateCommand.cs" />
     <Compile Include="Helper\SelectionBindingTextBox.cs" />
     <Compile Include="IShell.cs" />
+    <Page Include="Display\SudokuFieldView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Display\SudokuSetFieldView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -159,6 +168,10 @@
     <ProjectReference Include="..\Sudoku.Algorithms\Sudoku.Algorithms.csproj">
       <Project>{D92B0475-8ECF-4992-B3CE-351189DDF6CA}</Project>
       <Name>Sudoku.Algorithms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sudoku.Data\Sudoku.Data.csproj">
+      <Project>{A6582ABC-41EB-450E-B2A4-906B3D8FC6E6}</Project>
+      <Name>Sudoku.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,129 +1,76 @@
 ﻿using MT.Tools.Tracing;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace Sudoku.UI.Data
 {
-    public static class SudokuScoreSettings
+    public class SudokuScoreSettings
     {
-        #region Constructor
+        #region Singleton
 
-        static SudokuScoreSettings()
+        private static readonly Mutex _instanceCreationMutex = new Mutex();
+
+        private static SudokuScoreSettings _instance = null;
+        public static SudokuScoreSettings Instance
         {
-            LoadData();
+            get
+            {
+                // make sure only one instance is created
+                _instanceCreationMutex.WaitOne();
+                _instance = (_instance != null) ? _instance : new SudokuScoreSettings();
+                _instanceCreationMutex.ReleaseMutex();
+
+                return _instance;
+            }
         }
 
-        #endregion Constructor
+        private SudokuScoreSettings() { LoadData(); }
+
+        #endregion Singleton
 
         #region Members
 
         private static readonly string TEMP_SCORE_FILE = Path.Combine(Environment.ExpandEnvironmentVariables("%TEMP%"), "SudokuScore.xml");
-        public static UISudoku Sudoku { get; set; }
+        public ScoreHistory Score { get; set; } = null;
 
         #endregion Members
 
         #region Methods
         
-        public static void LoadData()
+        public void LoadData()
         {
             TraceOut.Enter();
-
-            Sudoku = new UISudoku();
-
+            
             if (File.Exists(TEMP_SCORE_FILE))
             {
-                score score = null;
-                var serializer = new XmlSerializer(typeof(score));
+                ScoreHistory score = null;
+                var serializer = new XmlSerializer(typeof(ScoreHistory));
 
                 using (var reader = new StreamReader(TEMP_SCORE_FILE))
                 {
-                    score = serializer.Deserialize(reader) as score;
+                    score = serializer.Deserialize(reader) as ScoreHistory;
                 }
-
-                score.fields.ForEach(x => {
-                    Sudoku.Fields[x.row, x.column].SetValue(x.value);
-                    Sudoku.IsFix[x.row, x.column] = x.isFix;
-                });
             }
 
             TraceOut.Leave();
         }
 
-        public static void SaveData()
+        public void SaveData()
         {
             TraceOut.Enter();
-
-            score score = new score();
-
-            for (int row = 0; row < 9; row++)
-            {
-                for (int column = 0; column < 9; column++)
-                {
-                    score.fields.Add(new field() {
-                        row = row,
-                        column = column,
-                        value = Sudoku.Fields[row, column].Value,
-                        isFix = Sudoku.IsFix[row, column]
-                    });
-                }
-            }
-
-            var serializer = new XmlSerializer(typeof(score));
+            
+            var serializer = new XmlSerializer(typeof(ScoreHistory));
 
             using (var writer = new StreamWriter(TEMP_SCORE_FILE))
             {
-                serializer.Serialize(writer, score);
+                serializer.Serialize(writer, Score);
             }
 
             TraceOut.Leave();
         }
         
         #endregion Methods
-    }
-
-    public class score
-    {
-        #region Members
-
-        [XmlArray]
-        public List<field> fields { get; set; } = new List<field>();
-
-        #endregion Members
-
-        #region Methods
-
-        public Algorithms.Field[,] Convert()
-        {
-            var sudokufields = new Algorithms.Field[9, 9];
-            fields.ForEach(x => sudokufields[x.row, x.column].SetValue(x.value));
-            return sudokufields;
-        }
-
-        #endregion Methods
-    }
-
-    public class field
-    {
-        #region Members
-
-        [XmlAttribute]
-        public int row { get; set; }
-
-        [XmlAttribute]
-        public int column { get; set; }
-
-        [XmlAttribute]
-        public int value { get; set; }
-
-        [XmlAttribute]
-        public bool isFix { get; set; }
-
-        #endregion Members
     }
 }

@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="SudokuAlgorithmTests_v3.cs" />
     <Compile Include="SudokuAlgorithmTests_v2.cs" />
     <Compile Include="SudokuAlgorithmTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +62,10 @@
     <ProjectReference Include="..\Sudoku.Algorithms\Sudoku.Algorithms.csproj">
       <Project>{d92b0475-8ecf-4992-b3ce-351189ddf6ca}</Project>
       <Name>Sudoku.Algorithms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sudoku.Data\Sudoku.Data.csproj">
+      <Project>{A6582ABC-41EB-450E-B2A4-906B3D8FC6E6}</Project>
+      <Name>Sudoku.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

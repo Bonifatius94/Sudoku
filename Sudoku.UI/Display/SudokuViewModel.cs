@@ -41,11 +41,11 @@ namespace Sudoku.UI.Display
 
         #region Methods
         
-        public UISudoku GetSudoku()
+        public ScoreSudokuPuzzle GetSudoku()
         {
             TraceOut.Enter();
 
-            var sudoku = new UISudoku();
+            var score = new ScoreSudokuPuzzle();
 
             for (int i = 0; i < 3; i++)
             {
@@ -55,15 +55,24 @@ namespace Sudoku.UI.Display
                     {
                         for (int l = 0; l < 3; l++)
                         {
-                            sudoku.Fields[i * 3 + k, j * 3 + l].SetValue(_boxes[i, j].Fields[k, l].GetValue());
-                            sudoku.IsFix[i * 3 + k, j * 3 + l] = _boxes[i, j].Fields[k, l].IsFix;
+                            int row = i * 3 + k;
+                            int column = j * 3 + l;
+
+                            if ()
+
+                            score.fields.Add(new ScoreSudokuField() {
+                                row = row, column = column, 
+                            });
+
+                            //sudoku.Fields[i * 3 + k, j * 3 + l].SetValue(_boxes[i, j].Fields[k, l].GetValue());
+                            //sudoku.IsFix[i * 3 + k, j * 3 + l] = _boxes[i, j].Fields[k, l].IsFix;
                         }
                     }
                 }
             }
 
             TraceOut.Leave();
-            return sudoku;
+            return score;
         }
 
         public void ApplySudoku(UISudoku sudoku)

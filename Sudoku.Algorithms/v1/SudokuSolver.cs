@@ -1,19 +1,20 @@
 ﻿using MT.Tools.Tracing;
+using Sudoku.Data;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sudoku.Algorithms
+namespace Sudoku.Algorithms.v1
 {
     public class SudokuSolver
     {
         #region Methods
 
-        public Sudoku SolveSudoku(Sudoku sudoku)
+        public SudokuPuzzle SolveSudoku(SudokuPuzzle sudoku)
         {
             return solveSudokuRecursive(sudoku);
         }
         
-        public bool HasSudokuUniqueSolution(Sudoku sudoku)
+        public bool HasSudokuUniqueSolution(SudokuPuzzle sudoku)
         {
             // solve sudoku (gets one solution out of many solutions)
             var solution = SolveSudoku(sudoku);
@@ -23,8 +24,8 @@ namespace Sudoku.Algorithms
             {
                 int row = 0;
                 int column = 0;
-                Field originalField;
-                var temp = (Sudoku)sudoku.Clone();
+                SudokuField originalField;
+                var temp = (SudokuPuzzle)sudoku.Clone();
 
                 // go through all empty fields (filled out fields are ignored)
                 while ((originalField = getNextFreeField(temp, ref row, ref column)) != null)
@@ -51,13 +52,13 @@ namespace Sudoku.Algorithms
             return ret;
         }
         
-        private Sudoku solveSudokuRecursive(Sudoku original, int row = 0, int column = 0)
+        private SudokuPuzzle solveSudokuRecursive(SudokuPuzzle original, int row = 0, int column = 0)
         {
-            Sudoku result = null;
-            Field field;
+            SudokuPuzzle result = null;
+            SudokuField field;
             
             // make a copy of overloaded sudoku
-            var copy = (Sudoku)original.Clone();
+            var copy = (SudokuPuzzle)original.Clone();
 
             // eliminate possibilities in copy / fill out fields with a single remaining possibility
             copy.EliminatePossibilities();
@@ -91,9 +92,9 @@ namespace Sudoku.Algorithms
             return result;
         }
 
-        private Sudoku tryNextLevel(Sudoku sudoku, int row, int column, IEnumerable<int> possibleValues)
+        private SudokuPuzzle tryNextLevel(SudokuPuzzle sudoku, int row, int column, IEnumerable<int> possibleValues)
         {
-            Sudoku result = null;
+            SudokuPuzzle result = null;
 
             // prepare row / column index for next recursion level
             int nextRow = row;
@@ -103,7 +104,7 @@ namespace Sudoku.Algorithms
             foreach (int value in possibleValues)
             {
                 // make copy of sudoku and try out possibility
-                var copy = (Sudoku)sudoku.Clone();
+                var copy = (SudokuPuzzle)sudoku.Clone();
                 copy.Fields[row, column].SetValue(value);
 
                 if (copy.IsValid())
@@ -119,11 +120,11 @@ namespace Sudoku.Algorithms
             return result;
         }
 
-        private Field getNextFreeField(Sudoku sudoku, ref int row, ref int column)
+        private SudokuField getNextFreeField(SudokuPuzzle sudoku, ref int row, ref int column)
         {
             // TODO: refactor this code. it is very complicated.
 
-            Field field;
+            SudokuField field;
             
             for (; row < sudoku.Length; row++)
             {

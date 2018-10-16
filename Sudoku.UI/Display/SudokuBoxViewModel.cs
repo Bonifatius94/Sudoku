@@ -11,6 +11,8 @@ namespace Sudoku.UI.Display
     {
         #region Members
 
+        // TODO: implement SudokuNotefieldViewModel
+
         private SudokuSetFieldViewModel[,] _fields = new SudokuSetFieldViewModel[3, 3]
         {
             {
@@ -29,6 +31,7 @@ namespace Sudoku.UI.Display
                 new SudokuSetFieldViewModel()
             }
         };
+
         public SudokuSetFieldViewModel[,] Fields { get { return _fields; } }
 
         public SudokuSetFieldViewModel Field_0_0 { get { return _fields[0, 0]; } }

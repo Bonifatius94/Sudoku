@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sudoku.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Sudoku.Algorithms
 {
     public interface ISudokuSolver
     {
-        Sudoku SolveSudoku(Sudoku sudoku);
-        bool HasSudokuUniqueSolution(Sudoku sudoku);
+        SudokuPuzzle SolveSudoku(SudokuPuzzle sudoku);
+        bool HasSudokuUniqueSolution(SudokuPuzzle sudoku);
     }
 }

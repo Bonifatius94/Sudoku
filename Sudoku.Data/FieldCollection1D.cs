@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sudoku.Algorithms
+namespace Sudoku.Data
 {
     public class FieldCollection1D : ISudokuSubcollection
     {
@@ -14,15 +14,15 @@ namespace Sudoku.Algorithms
         {
             // runs in constant time
             _length = length;
-            _fields = new Field[_length];
+            _fields = new SudokuField[_length];
 
             for (int i = 0; i < _length; i++)
             {
-                _fields[i] = new Field();
+                _fields[i] = new SudokuField();
             }
         }
 
-        public FieldCollection1D(Field[] fields)
+        public FieldCollection1D(SudokuField[] fields)
         {
             // runs in constant time
             _fields = fields;
@@ -34,8 +34,8 @@ namespace Sudoku.Algorithms
 
         protected int _length;
 
-        protected Field[] _fields;
-        public Field[] Fields { get { return _fields; } }
+        protected SudokuField[] _fields;
+        public SudokuField[] Fields { get { return _fields; } }
 
         #endregion Members
 

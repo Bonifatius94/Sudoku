@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using Sudoku.Data;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace Sudoku.Algorithms
+namespace Sudoku.Algorithms.v3
 {
-    public class SudokuSolver_v2 : ISudokuSolver
+    public class SudokuSolver : ISudokuSolver
     {
         #region Methods
 
-        public Sudoku SolveSudoku(Sudoku sudoku)
+        public SudokuPuzzle SolveSudoku(SudokuPuzzle sudoku)
         {
             return solveSudokuRecursive(sudoku);
         }
 
-        public bool HasSudokuUniqueSolution(Sudoku sudoku)
+        public bool HasSudokuUniqueSolution(SudokuPuzzle sudoku)
         {
             // sudokus with 16 or less determinded fields cannot have a unique solution
             // source: https://www.technologyreview.com/s/426554/mathematicians-solve-minimum-sudoku-problem/
@@ -26,7 +27,7 @@ namespace Sudoku.Algorithms
 
                 if (ret)
                 {
-                    var temp = (Sudoku)sudoku.Clone();
+                    var temp = (SudokuPuzzle)sudoku.Clone();
                     
                     // go through all empty fields (filled out fields are ignored)
                     while (ret && !temp.IsSolved())
@@ -36,7 +37,7 @@ namespace Sudoku.Algorithms
                         var field = temp.GetFreeFields().Where(x => x.GetPossibleValuesCount() == minPossibleValuesCount).ChooseRandom();
                         
                         // check if the field is determined; if not, there is a second solution => return false
-                        ret = isFieldDetermined(temp, solution, field);
+                        ret = isFieldDetermined(temp, solution, field.RowIndex, field.ColumnIndex);
 
                         // apply the determined value to the sudoku => less possibilities
                         field.SetValue(solution.Fields[field.RowIndex, field.ColumnIndex].Value);
@@ -47,24 +48,25 @@ namespace Sudoku.Algorithms
             return ret;
         }
 
-        protected bool isFieldDetermined(Sudoku sudoku, Sudoku solution, Field field)
+        protected bool isFieldDetermined(SudokuPuzzle sudoku, SudokuPuzzle solution, /*Field field,*/ int row, int column)
         {
             // get value from the first solution
-            int solutionValue = solution.Fields[field.RowIndex, field.ColumnIndex].Value;
+            var field = sudoku.Fields[row, column];
+            int value = solution.Fields[row, column].Value;
 
             // try to solve the sudoku again, but now without the value from the first solution
-            field.Possibilities[solutionValue - 1] = false;
+            field.Possibilities[value - 1] = false;
             var secondSolution = guessNextField(sudoku, field);
 
             // if there is no second solution, the sudoku has definitely a unique solution
             return (secondSolution == null || solution.Equals(secondSolution));
         }
 
-        protected Sudoku solveSudokuRecursive(Sudoku original)
+        protected SudokuPuzzle solveSudokuRecursive(SudokuPuzzle original)
         {
             // make a copy of overloaded sudoku
-            var copy = (Sudoku)original.Clone();
-            Sudoku result = copy;
+            var copy = (SudokuPuzzle)original.Clone();
+            SudokuPuzzle result = copy;
             
             // eliminate possibilities in copy / fill out fields with a single remaining possibility
             copy.EliminatePossibilities();
@@ -98,14 +100,14 @@ namespace Sudoku.Algorithms
             return result;
         }
 
-        protected Sudoku guessNextField(Sudoku sudoku, Field field)
+        protected SudokuPuzzle guessNextField(SudokuPuzzle sudoku, SudokuField field)
         {
-            Sudoku result = null;
+            SudokuPuzzle result = null;
 
             foreach (int value in field.GetPossibleValues().Shuffle())
             {
                 // make copy of sudoku and try out possibility
-                var copy = (Sudoku)sudoku.Clone();
+                var copy = (SudokuPuzzle)sudoku.Clone();
                 copy.Fields[field.RowIndex, field.ColumnIndex].SetValue(value);
 
                 if (copy.IsValid())

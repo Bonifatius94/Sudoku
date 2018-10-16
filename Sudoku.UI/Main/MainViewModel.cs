@@ -1,13 +1,13 @@
 ﻿using Caliburn.Micro;
-using Sudoku.UI.Display;
+using MT.Tools.Tracing;
+using Sudoku.Algorithms;
 using Sudoku.UI.Data;
+using Sudoku.UI.Display;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Sudoku.Algorithms;
-using System.Collections.ObjectModel;
-using MT.Tools.Tracing;
 
 namespace Sudoku.UI.Main
 {
@@ -24,7 +24,7 @@ namespace Sudoku.UI.Main
         public MainViewModel()
         {
             DisplayName = "Sudoku Solver v1.0";
-            _sudokuView.ApplySudoku(SudokuScoreSettings.Sudoku);
+            _sudokuView.ApplySudoku(SudokuScoreSettings.Instance.Score.historyAsList.Peek());
         }
 
         #endregion Constructor
@@ -33,8 +33,8 @@ namespace Sudoku.UI.Main
         
         private SudokuViewModel _sudokuView = new SudokuViewModel();
         public SudokuViewModel Sudoku { get { return _sudokuView; } }
-
-        private UISudoku _solution;
+        
+        private bool _isGeneratorRunning = false;
 
         #region CreationMode
 
@@ -100,21 +100,31 @@ namespace Sudoku.UI.Main
 
         #region Methods
 
-        public void GenerateSudoku()
+        public async void GenerateSudoku()
         {
             TraceOut.Enter();
 
-            _creationMode = SudokuCreationMode.Automatic;
-            NotifyOfPropertyChange(() => IsChecked_Automatic);
-            NotifyOfPropertyChange(() => IsChecked_Manual);
+            await Task.Run(() =>
+            {
+                if (!_isGeneratorRunning)
+                {
+                    _isGeneratorRunning = true;
+
+                    _creationMode = SudokuCreationMode.Automatic;
+                    NotifyOfPropertyChange(() => IsChecked_Automatic);
+                    NotifyOfPropertyChange(() => IsChecked_Manual);
+
+                    var sudoku = new UISudoku(new Algorithms.v2.SudokuGenerator().GenerateSudoku(_selectedDifficulty));
+                    _solution = new UISudoku(new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku));
+
+                    _sudokuView.ClearSudoku();
+                    _sudokuView.ApplySudoku(sudoku);
+                    _sudokuView.MarkSetFieldsAsFix();
+
+                    _isGeneratorRunning = false;
+                }
+            });
             
-            var sudoku = new UISudoku(new SudokuGenerator().GenerateSudoku(_selectedDifficulty));
-            _solution = new UISudoku(new SudokuSolver().SolveSudoku(sudoku));
-
-            _sudokuView.ClearSudoku();
-            _sudokuView.ApplySudoku(sudoku);
-            _sudokuView.MarkSetFieldsAsFix();
-
             TraceOut.Leave();
         }
 
@@ -134,7 +144,7 @@ namespace Sudoku.UI.Main
             if (_creationMode == SudokuCreationMode.Manual)
             {
                 var sudoku = _sudokuView.GetSudoku();
-                _solution = new UISudoku(new SudokuSolver().SolveSudoku(sudoku) ?? sudoku);
+                _solution = new UISudoku(new Algorithms.v1.SudokuSolver().SolveSudoku(sudoku) ?? sudoku);
             }
 
             _solution.IsFix = _sudokuView.GetSudoku().IsFix;

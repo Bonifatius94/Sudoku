@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Sudoku.Algorithms
+namespace Sudoku.Data
 {
     public class FieldCollection2D : ISudokuSubcollection
     {
@@ -11,20 +11,20 @@ namespace Sudoku.Algorithms
         public FieldCollection2D(int length)
         {
             _length = length;
-            _fields = new Field[_length, _length];
+            _fields = new SudokuField[_length, _length];
 
             for (int row = 0; row < _length; row++)
             {
                 for (int column = 0; column < _length; column++)
                 {
-                    _fields[row, column] = new Field();
+                    _fields[row, column] = new SudokuField();
                 }
             }
 
             init();
         }
 
-        public FieldCollection2D(Field[,] fields)
+        public FieldCollection2D(SudokuField[,] fields)
         {
             _fields = fields;
             _length = (int)Math.Sqrt(_fields.Length);
@@ -38,8 +38,8 @@ namespace Sudoku.Algorithms
         protected int _length;
         public int Length { get { return _length; } }
 
-        protected Field[,] _fields;
-        public Field[,] Fields { get { return _fields; } }
+        protected SudokuField[,] _fields;
+        public SudokuField[,] Fields { get { return _fields; } }
 
         protected FieldCollection1D[] _rows;
         public FieldCollection1D[] Rows { get { return _rows; } }
@@ -72,9 +72,9 @@ namespace Sudoku.Algorithms
             }
         }
 
-        public Field[] GetFields1D()
+        public SudokuField[] GetFields1D()
         {
-            var fields = new Field[_length * _length];
+            var fields = new SudokuField[_length * _length];
 
             for (int row = 0; row < _length; row++)
             {

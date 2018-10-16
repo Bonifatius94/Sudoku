@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Text;
 
-namespace Sudoku.Algorithms
+namespace Sudoku.Data
 {
-    public class Field : ICloneable
+    public class SudokuField : ICloneable
     {
         #region Constructor
 
-        public Field(int value = 0, int maxPossibilities = 9)
+        public SudokuField(int value = 0, int maxPossibilities = 9)
         {
             _maxPossibilities = maxPossibilities;
             _possibilities = new bool[_maxPossibilities];
@@ -26,7 +26,7 @@ namespace Sudoku.Algorithms
             }
         }
 
-        public Field(bool[] possibilities)
+        public SudokuField(bool[] possibilities)
         {
             _possibilities = possibilities;
             _maxPossibilities = _possibilities.Length;
@@ -123,7 +123,7 @@ namespace Sudoku.Algorithms
         {
             var possibilities = new bool[_maxPossibilities];
             _possibilities.CopyTo(possibilities, 0);
-            var field = new Field(possibilities);
+            var field = new SudokuField(possibilities);
             return field;
         }
 
