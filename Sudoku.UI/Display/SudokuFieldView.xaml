@@ -10,13 +10,13 @@
 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type local:SudokuSetFieldViewModel}">
-            <local:SudokuSetFieldView DataContext="{Binding DeterminedView, Mode=OneWay}" />
+            <local:SudokuSetFieldView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type local:SudokuNoteFieldViewModel}">
-            <local:SudokuNoteFieldView DataContext="{Binding NotesView, Mode=OneWay}" />
+            <local:SudokuNoteFieldView />
         </DataTemplate>
     </UserControl.Resources>
         
     <!--- TODO: rework style -->
-    <ContentControl Content="{Binding FieldTemplate, Mode=OneWay}" />
+    <ContentControl Content="{Binding FieldTemplate}" />
 </UserControl>

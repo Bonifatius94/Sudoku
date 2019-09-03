@@ -7,7 +7,7 @@
         xmlns:display="clr-namespace:Sudoku.UI.Display"
         
         mc:Ignorable="d"
-        Height="460" Width="360" Name="myMainWindow">
+        Height="480" Width="360" Name="myMainWindow">
 
     <Grid Margin="10" Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
         <Grid.LayoutTransform>
