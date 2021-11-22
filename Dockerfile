@@ -9,6 +9,7 @@ COPY ./src/Sudoku.UnitTests/Sudoku.UnitTests.csproj ./Sudoku.UnitTests/Sudoku.Un
 RUN dotnet restore
 
 COPY ./src .
+RUN dotnet test
 RUN dotnet publish -c Release -o /app/out
 
 #FROM mcr.microsoft.com/dotnet/runtime:5.0
