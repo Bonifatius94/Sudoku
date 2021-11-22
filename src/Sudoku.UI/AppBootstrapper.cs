@@ -1,5 +1,5 @@
 using Caliburn.Micro;
-using MT.Tools.Tracing;
+// using MT.Tools.Tracing;
 using Sudoku.UI.Main;
 using System;
 using System.Collections.Generic;
@@ -12,13 +12,13 @@ namespace Sudoku.UI
 
         public AppBootstrapper()
         {
-            TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.UI.exe.trc.txt", level: TraceLevel.All);
-            TraceOut.Enter();
+            // TraceOut.Enable(traceFile: @"C:\Trace\Sudoku.UI.exe.trc.txt", level: TraceLevel.All);
+            // TraceOut.Enter();
 
             // start Caliburn.Micro framework
             Initialize();
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
 
         #endregion Constructor
@@ -53,7 +53,7 @@ namespace Sudoku.UI
             }
             catch (Exception ex)
             {
-                TraceOut.WriteException(ex);
+                // TraceOut.WriteException(ex);
             }
 
             if (instance == null)

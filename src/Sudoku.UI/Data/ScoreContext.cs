@@ -1,4 +1,4 @@
-﻿using MT.Tools.Tracing;
+﻿// using MT.Tools.Tracing;
 using System;
 using System.IO;
 using System.Threading;
@@ -43,7 +43,7 @@ namespace Sudoku.UI.Data
         
         public ScoreHistory LoadData()
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             var score = new ScoreHistory();
 
@@ -57,13 +57,13 @@ namespace Sudoku.UI.Data
                 }
             }
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
             return score;
         }
 
         public void SaveData(ScoreHistory score = null)
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             _score = score ?? _score;
             var serializer = new XmlSerializer(typeof(ScoreHistory));
@@ -73,7 +73,7 @@ namespace Sudoku.UI.Data
                 serializer.Serialize(writer, _score);
             }
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
         
         #endregion Methods

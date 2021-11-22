@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using MT.Tools.Tracing;
+// using MT.Tools.Tracing;
 using Sudoku.Algorithms;
 using Sudoku.UI.Data;
 using Sudoku.UI.Display;
@@ -150,7 +150,7 @@ namespace Sudoku.UI.Main
 
         public async void GenerateSudoku()
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             await Task.Run(() =>
             {
@@ -180,21 +180,21 @@ namespace Sudoku.UI.Main
                 }
             });
             
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
 
         public void ClearSudoku()
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             _sudokuView.ClearSudoku();
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
 
         public void SolveSudoku()
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             // get a solution for the sudoku if not already available
             if (_creationMode == SudokuCreationMode.Manual)
@@ -216,7 +216,7 @@ namespace Sudoku.UI.Main
             // apply the solution to the view
             _sudokuView.ApplySudoku(_solution);
             
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
 
         public void ApplyChangesToHistory()
