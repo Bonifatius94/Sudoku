@@ -1,5 +1,5 @@
 ﻿using Caliburn.Micro;
-using MT.Tools.Tracing;
+// using MT.Tools.Tracing;
 using Sudoku.Data;
 using Sudoku.UI.Data;
 
@@ -44,7 +44,7 @@ namespace Sudoku.UI.Display
         
         public ScoreSudokuPuzzle GetSudoku()
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             var score = new ScoreSudokuPuzzle();
 
@@ -88,13 +88,13 @@ namespace Sudoku.UI.Display
                 }
             }
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
             return score;
         }
 
         public void ApplySudoku(ScoreSudokuPuzzle sudoku)
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             for (int row = 0; row < 9; row++)
             {
@@ -112,12 +112,12 @@ namespace Sudoku.UI.Display
                 }
             }
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
 
         public void ClearSudoku()
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             for (int row = 0; row < 9; row++)
             {
@@ -135,12 +135,12 @@ namespace Sudoku.UI.Display
                 }
             }
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
 
         public void MarkSetFieldsAsFix()
         {
-            TraceOut.Enter();
+            // TraceOut.Enter();
 
             for (int row = 0; row < 9; row++)
             {
@@ -157,7 +157,7 @@ namespace Sudoku.UI.Display
                 }
             }
 
-            TraceOut.Leave();
+            // TraceOut.Leave();
         }
         
         #endregion Methods

@@ -1,13 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MT.Tools.Tracing;
+﻿// using MT.Tools.Tracing;
 using Sudoku.Algorithms;
 using Sudoku.Data;
 using System;
+using Xunit;
 
 namespace Sudoku.UnitTests
 {
-    [TestClass]
-    public class SudokuAlgorithmTests
+    public class SudokuAlgorithmTests_v2
     {
         //#region Init
 
@@ -21,8 +20,8 @@ namespace Sudoku.UnitTests
 
         #region TestMethods
 
-        [TestMethod]
-        public void TestSudokuSolver_Easy()
+        [Fact]
+        public void TestSudokuSolver_Easy_v2()
         {
             Console.WriteLine("==========================");
             Console.WriteLine("    Sudoku Solver Test");
@@ -31,17 +30,19 @@ namespace Sudoku.UnitTests
 
             DateTime start = DateTime.Now;
             var sudoku = getEasyTestSudoku();
-            var solution = new Algorithms.v1.SudokuSolver().SolveSudoku(sudoku);
+            var solution = new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku);
             DateTime end = DateTime.Now;
 
             Console.WriteLine("\r\n" + sudoku.ToString());
             Console.WriteLine("\r\n" + solution?.ToString());
             Console.WriteLine($"solving sudoku took { (end - start).TotalMilliseconds }ms");
             Console.WriteLine("");
+
+            Assert.True(solution != null);
         }
 
-        [TestMethod]
-        public void TestSudokuSolver_Hard()
+        [Fact]
+        public void TestSudokuSolver_Hard_v2()
         {
             Console.WriteLine("==========================");
             Console.WriteLine("    Sudoku Solver Test");
@@ -50,7 +51,7 @@ namespace Sudoku.UnitTests
 
             DateTime start = DateTime.Now;
             var sudoku = getDifficultTestSudoku();
-            var solution = new Algorithms.v1.SudokuSolver().SolveSudoku(sudoku);
+            var solution = new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku);
             DateTime end = DateTime.Now;
 
             Console.WriteLine("\r\n" + sudoku.ToString());
@@ -59,8 +60,8 @@ namespace Sudoku.UnitTests
             Console.WriteLine("");
         }
 
-        [TestMethod]
-        public void TestUniquenessCheck_Easy()
+        [Fact]
+        public void TestUniquenessCheck_Easy_v2()
         {
             Console.WriteLine("==========================");
             Console.WriteLine("    Uniqueness Test");
@@ -68,7 +69,7 @@ namespace Sudoku.UnitTests
 
             DateTime start = DateTime.Now;
             var sudoku = getEasyTestSudoku();
-            var isUnique = new Algorithms.v1.SudokuSolver().HasSudokuUniqueSolution(sudoku);
+            var isUnique = new Algorithms.v2.SudokuSolver().HasSudokuUniqueSolution(sudoku);
             Console.WriteLine(isUnique.ToString());
             DateTime end = DateTime.Now;
 
@@ -76,8 +77,8 @@ namespace Sudoku.UnitTests
             Console.WriteLine("");
         }
 
-        [TestMethod]
-        public void TestUniquenessCheck_Hard()
+        [Fact]
+        public void TestUniquenessCheck_Hard_v2()
         {
             Console.WriteLine("==========================");
             Console.WriteLine("    Uniqueness Test");
@@ -85,7 +86,7 @@ namespace Sudoku.UnitTests
 
             DateTime start = DateTime.Now;
             var sudoku = getDifficultTestSudoku();
-            var isUnique = new Algorithms.v1.SudokuSolver().HasSudokuUniqueSolution(sudoku);
+            var isUnique = new Algorithms.v2.SudokuSolver().HasSudokuUniqueSolution(sudoku);
             Console.WriteLine(isUnique.ToString());
             DateTime end = DateTime.Now;
             
@@ -93,8 +94,8 @@ namespace Sudoku.UnitTests
             Console.WriteLine("");
         }
 
-        [TestMethod]
-        public void TestSudokuGeneratorPerformance()
+        [Fact]
+        public void TestSudokuGeneratorPerformance_v2()
         {
             Console.WriteLine("==========================");
             Console.WriteLine("Generator Performance Test");
@@ -106,16 +107,16 @@ namespace Sudoku.UnitTests
             // generate 10 sudokus, check if they have a unique solution and find out the solution
             for (int i = 0; i < count; i++)
             {
-                var genSudoku = new Algorithms.v1.SudokuGenerator().GenerateSudoku(SudokuDifficuty.Extreme);
+                var genSudoku = new Algorithms.v2.SudokuGenerator().GenerateSudoku(SudokuDifficuty.Extreme);
                 Console.WriteLine("\r\n" + genSudoku.ToString());
-                Console.WriteLine(new Algorithms.v1.SudokuSolver().HasSudokuUniqueSolution(genSudoku).ToString());
-                Console.WriteLine("\r\n" + new Algorithms.v1.SudokuSolver().SolveSudoku(genSudoku));
+                Console.WriteLine(new Algorithms.v2.SudokuSolver().HasSudokuUniqueSolution(genSudoku).ToString());
+                Console.WriteLine("\r\n" + new Algorithms.v2.SudokuSolver().SolveSudoku(genSudoku));
             }
 
             DateTime end = DateTime.Now;
 
             Console.WriteLine("");
-            Console.WriteLine($"generating {count } sudokus took { (end - start).TotalSeconds }s");
+            Console.WriteLine($"generating { count } sudokus took { (end - start).TotalSeconds }s");
             Console.WriteLine("");
         }
 

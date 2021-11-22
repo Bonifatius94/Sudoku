@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <KnownFrameworkReference Update="Microsoft.WindowsDesktop.App.WPF" IsWindowsOnly="false" />
+    <ProjectReference Include="..\Sudoku.Algorithms\Sudoku.Algorithms.csproj" />
+    <ProjectReference Include="..\Sudoku.Data\Sudoku.Data.csproj" />
+    <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
+  </ItemGroup>
+</Project>
