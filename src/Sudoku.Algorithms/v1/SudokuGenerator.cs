@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Sudoku.Algorithms.v1
 {
-    public class SudokuGenerator : ISudokuGenerator
+    internal class SudokuGenerator : ISudokuGenerator
     {
         #region Members
 
@@ -14,11 +14,11 @@ namespace Sudoku.Algorithms.v1
         #endregion Members
 
         #region Methods
-        
+
         public ISudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
         {
             // get filled out random sudoku
-            var solver = new SudokuSolver();
+            var solver = SudokuAlgorithmFactory.CreatePuzzleSolver();
             var sudoku = solver.SolveSudoku(SudokuFactory.CreateEmptyPuzzle());
 
             // reset several values (depending on desired difficulty)

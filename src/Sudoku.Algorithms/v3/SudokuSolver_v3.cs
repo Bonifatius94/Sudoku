@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Sudoku.Algorithms.v3
 {
-    public class SudokuSolver : ISudokuSolver
+    internal class SudokuSolver : ISudokuSolver
     {
         #region Methods
 

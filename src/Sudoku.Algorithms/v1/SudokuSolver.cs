@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Sudoku.Algorithms.v1
 {
-    public class SudokuSolver
+    internal class SudokuSolver : ISudokuSolver
     {
         #region Methods
 
@@ -104,35 +104,6 @@ namespace Sudoku.Algorithms.v1
             return result;
         }
 
-        // private SudokuField getNextFreeField(ISudokuPuzzle sudoku, ref int row, ref int column)
-        // {
-        //     // TODO: refactor this code. it is very complicated.
-
-        //     SudokuField field;
-            
-        //     for (; row < sudoku.Length; row++)
-        //     {
-        //         for (; column < sudoku.Length; column++)
-        //         {
-        //             field = sudoku.Fields[row, column];
-        //             if (field.Value == 0) { return field; }
-        //         }
-
-        //         column = 0;
-        //     }
-
-        //     field = null;
-
-        // Leave:
-        //     return field;
-        // }
-
-        // private void incrementFieldIndices(ref int row, ref int column, int length)
-        // {
-        //     row = (column == length - 1) ? row + 1 : row;
-        //     column = (column + 1) % length;
-        // }
-        
         #endregion Methods
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sudoku.Algorithms.v3
 {
-    public class SudokuGenerator : SudokuSolver, ISudokuGenerator
+    internal class SudokuGenerator : SudokuSolver, ISudokuGenerator
     {
         #region Members
 

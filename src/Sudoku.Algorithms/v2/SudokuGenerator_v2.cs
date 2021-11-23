@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sudoku.Algorithms.v2
 {
-    public class SudokuGenerator : v1.SudokuSolver, ISudokuGenerator
+    internal class SudokuGenerator : ISudokuGenerator
     {
         #region Members
 
@@ -21,7 +21,8 @@ namespace Sudoku.Algorithms.v2
         public ISudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
         {
             // get randomly filled out sudoku
-            var source = SolveSudoku(SudokuFactory.CreateEmptyPuzzle(length));
+            var solver = SudokuAlgorithmFactory.CreatePuzzleSolver();
+            var source = solver.SolveSudoku(SudokuFactory.CreateEmptyPuzzle(length));
             ISudokuPuzzle result;
 
             int i;
@@ -44,13 +45,15 @@ namespace Sudoku.Algorithms.v2
 
         private bool removeField(ISudokuPuzzle sudoku, ISudokuPuzzle solution)
         {
+            var solver = SudokuAlgorithmFactory.CreatePuzzleSolver();
+
             foreach (SudokuField field in sudoku.GetSetFields().Shuffle())
             {
                 // clone sudoku and set the field value to 0
                 var temp = sudoku.DeepCopy();
                 temp.SetValue(field.RowIndex, field.ColumnIndex, 0);
 
-                if (HasSudokuUniqueSolution(temp))
+                if (solver.HasSudokuUniqueSolution(temp))
                 {
                     temp.SetValue(field.RowIndex, field.ColumnIndex, 0);
                     return true;

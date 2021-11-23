@@ -164,10 +164,12 @@ namespace Sudoku.UI.Main
                     NotifyOfPropertyChange(() => IsChecked_Manual);
 
                     // create a new sudoku puzzle and solve it
-                    var sudoku = new Algorithms.v2.SudokuGenerator().GenerateSudoku(_selectedDifficulty);
+                    var sudoku = SudokuAlgorithmFactory.CreatePuzzleGenerator()
+                        .GenerateSudoku(_selectedDifficulty);
                     var sudokuAsScore = new ScoreSudokuPuzzle(sudoku);
-                    _solution = new ScoreSudokuPuzzle(new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku));
-                    
+                    _solution = new ScoreSudokuPuzzle(SudokuAlgorithmFactory
+                        .CreatePuzzleSolver().SolveSudoku(sudoku));
+
                     // apply the sudoku to the view
                     _sudokuView.ClearSudoku();
                     _sudokuView.ApplySudoku(sudokuAsScore);
@@ -200,7 +202,9 @@ namespace Sudoku.UI.Main
             if (_creationMode == SudokuCreationMode.Manual)
             {
                 var sudoku = _sudokuView.GetSudoku();
-                _solution = new ScoreSudokuPuzzle(new Algorithms.v2.SudokuSolver().SolveSudoku(sudoku.Deserialize()) ?? sudoku.Deserialize());
+                _solution = new ScoreSudokuPuzzle(
+                    SudokuAlgorithmFactory.CreatePuzzleSolver()
+                        .SolveSudoku(sudoku.Deserialize()) ?? sudoku.Deserialize());
             }
 
             // check if this is still necessary

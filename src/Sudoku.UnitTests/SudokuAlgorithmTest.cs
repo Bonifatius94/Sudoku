@@ -1,7 +1,7 @@
 using Xunit;
 using Sudoku.Data;
-using Sudoku.Algorithms.v3;
 using System.Linq;
+using Sudoku.Algorithms;
 
 namespace Sudoku.UnitTests
 {
@@ -27,7 +27,7 @@ namespace Sudoku.UnitTests
         public void ShouldSolveEasySudoku()
         {
             var sudoku = getEasyTestSudoku();
-            var sudkuSolver = new SudokuSolver();
+            var sudkuSolver = SudokuAlgorithmFactory.CreatePuzzleSolver();
             var solution = sudkuSolver.SolveSudoku(sudoku);
             Assert.True(solution.IsSolved());
         }
@@ -36,7 +36,7 @@ namespace Sudoku.UnitTests
         public void ShouldSolveDifficultSudoku()
         {
             var sudoku = getDifficultTestSudoku();
-            var sudkuSolver = new SudokuSolver();
+            var sudkuSolver = SudokuAlgorithmFactory.CreatePuzzleSolver();
             var solution = sudkuSolver.SolveSudoku(sudoku);
             Assert.True(solution.IsSolved());
         }
