@@ -29,6 +29,12 @@ namespace Sudoku.Algorithms
             return results;
         }
 
+        public static T ChooseRandomOrDefault<T>(this IEnumerable<T> list)
+        {
+            if (list?.Count() == 0) { return default(T); }
+            return list.ChooseRandom();
+        }
+
         public static T ChooseRandom<T>(this IEnumerable<T> list)
         {
             int count = list != null ? Enumerable.Count(list) : 0;

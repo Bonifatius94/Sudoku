@@ -15,11 +15,11 @@ namespace Sudoku.Algorithms.v1
 
         #region Methods
         
-        public SudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
+        public ISudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
         {
             // get filled out random sudoku
             var solver = new SudokuSolver();
-            var sudoku = solver.SolveSudoku(new SudokuPuzzle());
+            var sudoku = solver.SolveSudoku(SudokuFactory.CreateEmptyPuzzle());
 
             // reset several values (depending on desired difficulty)
             for (int i = 0; i < (length * length) - (int)difficulty; i++)

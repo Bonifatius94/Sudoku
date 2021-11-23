@@ -9,6 +9,6 @@ namespace Sudoku.Algorithms
 {
     public interface ISudokuGenerator
     {
-        SudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9);
+        ISudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9);
     }
 }

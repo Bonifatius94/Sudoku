@@ -17,22 +17,22 @@ namespace Sudoku.Algorithms.v3
 
         #region Methods
 
-        public SudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
+        public ISudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
         {
             // get randomly filled out sudoku
-            SudokuPuzzle solution = SolveSudoku(new SudokuPuzzle());
-            SudokuPuzzle sudoku = (SudokuPuzzle)solution.Clone();
-            
+            var solution = SolveSudoku(SudokuFactory.CreateEmptyPuzzle());
+            var sudoku = solution.DeepCopy();
+
             // check how many fields need to be removed (depending on desired difficulty)
             int fieldsToRemove = ((length * length) - (int)difficulty);
 
             while (fieldsToRemove > 0)
             {
-                int freeFieldsCount = sudoku.GetFreeFields().Count;
+                int freeFieldsCount = sudoku.GetFreeFields().Count();
 
                 foreach (var field in sudoku.GetSetFields().Shuffle())
                 {
-                    if (fieldsToRemove > 0 && isFieldDetermined(sudoku, solution, field.RowIndex, field.ColumnIndex))
+                    if (fieldsToRemove > 0 && isFieldDetermined(sudoku, solution, field))
                     {
                         field.SetValue(0);
                         fieldsToRemove--;
@@ -40,7 +40,7 @@ namespace Sudoku.Algorithms.v3
                 }
 
                 // check if progress was made (if not => try with another sudoku puzzle)
-                if ((freeFieldsCount - sudoku.GetFreeFields().Count) == 0)
+                if ((freeFieldsCount - sudoku.GetFreeFields().Count()) == 0)
                 {
                     sudoku = GenerateSudoku(difficulty, length);
                     break;

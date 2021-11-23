@@ -18,55 +18,41 @@ namespace Sudoku.Algorithms.v2
 
         #region Methods
 
-        public SudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
+        public ISudokuPuzzle GenerateSudoku(SudokuDifficuty difficulty, int length = 9)
         {
             // get randomly filled out sudoku
-            SudokuPuzzle source = SolveSudoku(new SudokuPuzzle());
-            SudokuPuzzle result;
+            var source = SolveSudoku(SudokuFactory.CreateEmptyPuzzle(length));
+            ISudokuPuzzle result;
 
             int i;
             int fieldsToRemove = ((length * length) - (int)difficulty);
 
-            //DateTime genStart = DateTime.Now;
-            //Console.WriteLine($"====================================================");
-
             do
             {
-                result = (SudokuPuzzle)source.Clone();
-                result.GetFields1D().ChooseRandom().SetValue(0);
+                result = source.DeepCopy();
+                result.GetSetFields().ChooseRandom().SetValue(0);
                 
                 for (i = 0; i < fieldsToRemove; i++)
                 {
-                    //DateTime start = DateTime.Now;
-
                     if (!removeField(result, source)) { break; }
-
-                    //DateTime end = DateTime.Now;
-                    //Console.WriteLine($"iteration { i } took { (end - start).TotalMilliseconds } ms");
                 }
-
-                //if (i < fieldsToRemove) { Console.WriteLine($"generator failed"); }
-                //else { Console.WriteLine($"generator successful (total time elapsed: { (DateTime.Now - genStart).TotalMilliseconds } ms)"); }
             }
             while (i < fieldsToRemove);
-
-            //Console.WriteLine($"====================================================");
 
             return result;
         }
 
-        private bool removeField(SudokuPuzzle sudoku, SudokuPuzzle solution)
+        private bool removeField(ISudokuPuzzle sudoku, ISudokuPuzzle solution)
         {
             foreach (SudokuField field in sudoku.GetSetFields().Shuffle())
             {
                 // clone sudoku and set the field value to 0
-                SudokuPuzzle temp = (SudokuPuzzle)sudoku.Clone();
-                SudokuField tempField = temp.Fields[field.RowIndex, field.ColumnIndex];
-                tempField.SetValue(0);
+                var temp = sudoku.DeepCopy();
+                temp.SetValue(field.RowIndex, field.ColumnIndex, 0);
 
                 if (HasSudokuUniqueSolution(temp))
                 {
-                    field.SetValue(0);
+                    temp.SetValue(field.RowIndex, field.ColumnIndex, 0);
                     return true;
                 }
             }

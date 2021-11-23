@@ -5,12 +5,34 @@ using System.Text;
 
 namespace Sudoku.Data
 {
-    public class SudokuPuzzle : FieldCollection2D, ICloneable
+    public interface ISudokuPuzzle
+    {
+        bool IsValid();
+        bool IsSolved();
+        void EliminatePossibilities();
+
+        int GetSolvedFieldsCount();
+        IEnumerable<SudokuField> GetFreeFields();
+        IEnumerable<SudokuField> GetSetFields();
+        IEnumerable<SudokuField> GetAllFields();
+
+        void ForbidPossibility(int row, int col, int value);
+        void AllowPossibility(int row, int col, int value);
+
+        int GetValue(int row, int col);
+        void SetValue(int row, int col, int value);
+        ISudokuPuzzle DeepCopy();
+    }
+
+    internal class SudokuPuzzle : FieldCollection2D, ICloneable, ISudokuPuzzle
     {
         #region Constructor
 
-        public SudokuPuzzle(SudokuField[,] fields) : base(fields) { initSudoku(); }
-        public SudokuPuzzle(int length = 9) : base(length) { initSudoku(); }
+        internal SudokuPuzzle(SudokuField[,] fields) : base(fields) { initSudoku(); }
+
+        internal SudokuPuzzle(int[] fields) : base(fields) { initSudoku(); }
+
+        internal SudokuPuzzle(int length = 9) : base(length) { initSudoku(); }
 
         private void initSudoku()
         {
@@ -43,6 +65,8 @@ namespace Sudoku.Data
                     }
                 }
             }
+
+            EliminatePossibilities();
         }
 
         #endregion Constructor
@@ -50,7 +74,7 @@ namespace Sudoku.Data
         #region Members
 
         private FieldCollection2D[,] _squares;
-        public FieldCollection2D[,] Squares { get { return _squares; } }
+        // public FieldCollection2D[,] Squares { get { return _squares; } }
         
         #endregion Members
 
@@ -59,33 +83,29 @@ namespace Sudoku.Data
         #region Fields
 
         public int GetSolvedFieldsCount()
-        {
-            return GetFields1D().Where(x => x.Value > 0).Count();
-        }
+            => GetFields1D().Where(x => x.Value > 0).Count();
 
-        public List<SudokuField> GetFreeFields()
-        {
-            return GetFields1D().Where(x => x.Value == 0).ToList();
-        }
+        public IEnumerable<SudokuField> GetFreeFields()
+            => GetFields1D().Where(x => x.Value == 0);
 
-        public List<SudokuField> GetSetFields()
-        {
-            return GetFields1D().Where(x => x.Value > 0).ToList();
-        }
+        public IEnumerable<SudokuField> GetSetFields()
+            => GetFields1D().Where(x => x.Value > 0);
+
+        public IEnumerable<SudokuField> GetAllFields() => GetFields1D();
+
+        public int GetValue(int row, int col)
+            => _fields[row, col].Value;
+
+        public void SetValue(int row, int col, int value)
+            => _fields[row, col].SetValue(value);
 
         #endregion Fields
 
         #region Possibilities
 
-        public bool IsValid()
-        {
-            return GetFields1D().All(x => x.GetPossibleValuesCount() > 0);
-        }
+        public bool IsValid() => GetAllFields().All(x => x.GetPossibleValuesCount() > 0);
 
-        public bool IsSolved()
-        {
-            return GetFreeFields().Count == 0 && IsValid();
-        }
+        public bool IsSolved() => GetFreeFields().Count() == 0 && IsValid();
 
         public void EliminatePossibilities()
         {
@@ -100,21 +120,35 @@ namespace Sudoku.Data
             }
             while (diff > 0);
         }
+
+        public void ForbidPossibility(int row, int col, int value)
+        {
+            _fields[row, col].Possibilities[value-1] = false;
+        }
+
+        public void AllowPossibility(int row, int col, int value)
+        {
+            _fields[row, col].Possibilities[value-1] = true;
+        }
         
         #endregion Possibilities
 
         #region Overrides
 
+        public ISudokuPuzzle DeepCopy()
+            => (ISudokuPuzzle)Clone();
+
         public virtual object Clone()
         {
             // clone all fields and apply them to a new sudoku
             var fields = new SudokuField[_length, _length];
-            GetFields1D().ToList().ForEach(x => fields[x.RowIndex, x.ColumnIndex] = (SudokuField)x.Clone());
+            GetFields1D().ToList().ForEach(x =>
+                fields[x.RowIndex, x.ColumnIndex] = (SudokuField)x.Clone());
             var ret = new SudokuPuzzle(fields);
 
             return ret;
         }
-        
+
         public override bool Equals(object obj)
         {
             var sudoku = obj as SudokuPuzzle;
@@ -123,7 +157,8 @@ namespace Sudoku.Data
             if (sudoku != null)
             {
                 // check if all possibilities are equal or not
-                ret = sudoku.GetFields1D().All(x => x.Possibilities.SequenceEqual(_fields[x.RowIndex, x.ColumnIndex].Possibilities));
+                ret = sudoku.GetFields1D().All(x => x.Possibilities.SequenceEqual(
+                    _fields[x.RowIndex, x.ColumnIndex].Possibilities));
             }
 
             return ret;
@@ -133,6 +168,7 @@ namespace Sudoku.Data
         {
             // this enforces the Equals() function for types like HashSet, Dictionary, etc.
             return 0;
+            // TODO: think of something more intelligent to at least differ sudokus in most cases
         }
 
         public override string ToString()
@@ -153,7 +189,9 @@ namespace Sudoku.Data
                     {
                         for (int l = 0; l < squareLength; l++)
                         {
-                            builder.Append($" { _fields[i * squareLength + j, k * squareLength + l].Value }");
+                            int row = i * squareLength + j;
+                            int col = k * squareLength + l;
+                            builder.Append($" { _fields[row, col].Value }");
                         }
 
                         builder.Append(" |");

@@ -13,7 +13,7 @@ namespace Sudoku.UI.Data
         #region Constructor
 
         public ScoreSudokuPuzzle() { }
-        public ScoreSudokuPuzzle(SudokuPuzzle sudoku) { Serialize(sudoku); }
+        public ScoreSudokuPuzzle(ISudokuPuzzle sudoku) { Serialize(sudoku); }
 
         #endregion Constructor
 
@@ -26,22 +26,22 @@ namespace Sudoku.UI.Data
 
         #region Methods
 
-        public void Serialize(SudokuPuzzle sudoku)
+        public void Serialize(ISudokuPuzzle sudoku)
         {
-            sudoku.GetFields1D().ToList().ForEach(x => fields.Add(new ScoreSudokuField()
-            {
-                row = x.RowIndex,
-                column = x.ColumnIndex,
-                value = x.Value,
-                possibilities = x.Possibilities
+            var indices = Enumerable.Range(0, 81).Select(i => new { row = i / 9, col = i % 9 });
+            var values = indices.Select(x => new { row = x.row, col = x.col, value = sudoku.GetValue(x.row, x.col) });
+            values.ToList().ForEach(x => fields.Add(new ScoreSudokuField() {
+                row = x.row,
+                column = x.col,
+                value = x.value,
+                possibilities = new bool[9] { true, true, true, true, true, true, true, true, true }
             }));
         }
 
-        public SudokuPuzzle Deserialize()
+        public ISudokuPuzzle Deserialize()
         {
-            var sudokufields = new SudokuField[9, 9];
-            fields.ForEach(x => sudokufields[x.row, x.column] = new SudokuField(x.value));
-            return new SudokuPuzzle(sudokufields);
+            var digits = fields.Select(x => x.value).ToArray();
+            return SudokuFactory.CreatePuzzle(digits);
         }
 
         #endregion Methods

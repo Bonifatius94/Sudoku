@@ -31,6 +31,23 @@ namespace Sudoku.Data
             init();
         }
 
+        public FieldCollection2D(int[] fields)
+        {
+            _length = (int)Math.Sqrt(fields.Length);
+            _fields = new SudokuField[_length, _length];
+
+            for (int row = 0; row < _length; row++)
+            {
+                for (int col = 0; col < _length; col++)
+                {
+                    int value = fields[row * _length + col];
+                    _fields[row, col] = new SudokuField(value);
+                }
+            }
+
+            init();
+        }
+
         #endregion Constructor
 
         #region Members
@@ -61,7 +78,7 @@ namespace Sudoku.Data
                 _rows[i] = new FieldCollection1D(_length);
                 _columns[i] = new FieldCollection1D(_length);
             }
-            
+
             for (int row = 0; row < _length; row++)
             {
                 for (int column = 0; column < _length; column++)

@@ -9,7 +9,7 @@ namespace Sudoku.Algorithms
 {
     public interface ISudokuSolver
     {
-        SudokuPuzzle SolveSudoku(SudokuPuzzle sudoku);
-        bool HasSudokuUniqueSolution(SudokuPuzzle sudoku);
+        ISudokuPuzzle SolveSudoku(ISudokuPuzzle sudoku);
+        bool HasSudokuUniqueSolution(ISudokuPuzzle sudoku);
     }
 }

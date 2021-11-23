@@ -9,12 +9,12 @@ namespace Sudoku.Algorithms.v1
     {
         #region Methods
 
-        public SudokuPuzzle SolveSudoku(SudokuPuzzle sudoku)
+        public ISudokuPuzzle SolveSudoku(ISudokuPuzzle sudoku)
         {
             return solveSudokuRecursive(sudoku);
         }
-        
-        public bool HasSudokuUniqueSolution(SudokuPuzzle sudoku)
+
+        public bool HasSudokuUniqueSolution(ISudokuPuzzle sudoku)
         {
             // solve sudoku (gets one solution out of many solutions)
             var solution = SolveSudoku(sudoku);
@@ -22,95 +22,79 @@ namespace Sudoku.Algorithms.v1
 
             if (solution != null)
             {
-                int row = 0;
-                int column = 0;
                 SudokuField originalField;
-                var temp = (SudokuPuzzle)sudoku.Clone();
+                var temp = sudoku.DeepCopy();
 
                 // go through all empty fields (filled out fields are ignored)
-                while ((originalField = getNextFreeField(temp, ref row, ref column)) != null)
+                while ((originalField = temp.GetFreeFields().ChooseRandomOrDefault()) != null)
                 {
+                    int row = originalField.RowIndex;
+                    int column = originalField.ColumnIndex;
+
                     // get value of field from solution
-                    int solutionValue = solution.Fields[row, column].Value;
+                    int solutionValue = solution.GetValue(row, column);
 
                     // try to solve the sudoku again, but without the value from the solution
-                    var possibleValues = originalField.GetPossibleValues().Except(new int[] { solutionValue }).ToArray();
-                    var secondSolution = tryNextLevel(temp, row, column, possibleValues);
+                    var possibleValues = originalField.GetPossibleValues()
+                        .Except(new int[] { solutionValue }).ToArray();
+                    var secondSolution = tryNextLevel(temp, null); // tryNextLevel(temp, row, column, possibleValues);
 
                     // if there is a second solution, the sudoku has definitely not a unique solution => leave with false
-                    if (secondSolution != null && !solution.Equals(secondSolution)) { goto Leave; }
-
-                    // increment row / column index => this avoids checking a field twice
-                    incrementFieldIndices(ref row, ref column, sudoku.Length);
+                    if (secondSolution != null && !solution.Equals(secondSolution)) { return ret; }
                 }
             }
 
-            // all empty fields have a unique solution => there is no second solution => leave with true
-            ret = true;
-
-        Leave:
-            return ret;
+            // all empty fields have a unique solution
+            // => there is no second solution => leave with true
+            return true;
         }
         
-        private SudokuPuzzle solveSudokuRecursive(SudokuPuzzle original, int row = 0, int column = 0)
+        private ISudokuPuzzle solveSudokuRecursive(ISudokuPuzzle original)
         {
-            SudokuPuzzle result = null;
+            ISudokuPuzzle result = null;
             SudokuField field;
             
             // make a copy of overloaded sudoku
-            var copy = (SudokuPuzzle)original.Clone();
+            var copy = original.DeepCopy();
 
             // eliminate possibilities in copy / fill out fields with a single remaining possibility
             copy.EliminatePossibilities();
 
             // go through all empty fields
-            while ((field = getNextFreeField(copy, ref row, ref column)) != null)
+            while ((field = copy.GetFreeFields().ChooseRandomOrDefault()) != null)
             {
-                var possibleValues = field.GetPossibleValues().Shuffle();
-                
-                if (possibleValues.Count > 1)
+                int possibleValuesCount = field.GetPossibleValuesCount();
+                if (possibleValuesCount > 1)
                 {
                     // case with multiple remaining possibilities => try each of them with brute force
-                    result = tryNextLevel(copy, row, column, possibleValues);
-                    goto Leave;
+                    return tryNextLevel(copy, field);
                 }
-                else if (possibleValues.Count == 1)
+                else if (possibleValuesCount == 1)
                 {
                     // case with a single remaining possibility => set value
                     field.SetValueIfDetermined();
                 }
-                else
-                {
-                    result = null;
-                    goto Leave;
-                }
+                else { return null; }
             }
 
             result = copy.IsSolved() ? copy : result;
-
-        Leave:
             return result;
         }
 
-        private SudokuPuzzle tryNextLevel(SudokuPuzzle sudoku, int row, int column, IEnumerable<int> possibleValues)
+        private ISudokuPuzzle tryNextLevel(ISudokuPuzzle sudoku, SudokuField field)
         {
-            SudokuPuzzle result = null;
+            ISudokuPuzzle result = null;
 
-            // prepare row / column index for next recursion level
-            int nextRow = row;
-            int nextColumn = column;
-            incrementFieldIndices(ref nextRow, ref nextColumn, sudoku.Length);
-
-            foreach (int value in possibleValues)
+            foreach (int value in field.GetPossibleValues())
             {
                 // make copy of sudoku and try out possibility
-                var copy = (SudokuPuzzle)sudoku.Clone();
-                copy.Fields[row, column].SetValue(value);
+                var copy = sudoku.DeepCopy();
+                copy.SetValue(field.RowIndex, field.ColumnIndex, value);
 
                 if (copy.IsValid())
                 {
                     // go to next recursion level
-                    result = solveSudokuRecursive(copy, nextRow, nextColumn);
+                    result = solveSudokuRecursive(copy);
 
                     // pass correct solution to lower recursion levels
                     if (result != null) { break; }
@@ -120,34 +104,34 @@ namespace Sudoku.Algorithms.v1
             return result;
         }
 
-        private SudokuField getNextFreeField(SudokuPuzzle sudoku, ref int row, ref int column)
-        {
-            // TODO: refactor this code. it is very complicated.
+        // private SudokuField getNextFreeField(ISudokuPuzzle sudoku, ref int row, ref int column)
+        // {
+        //     // TODO: refactor this code. it is very complicated.
 
-            SudokuField field;
+        //     SudokuField field;
             
-            for (; row < sudoku.Length; row++)
-            {
-                for (; column < sudoku.Length; column++)
-                {
-                    field = sudoku.Fields[row, column];
-                    if (field.Value == 0) { goto Leave; }
-                }
+        //     for (; row < sudoku.Length; row++)
+        //     {
+        //         for (; column < sudoku.Length; column++)
+        //         {
+        //             field = sudoku.Fields[row, column];
+        //             if (field.Value == 0) { return field; }
+        //         }
 
-                column = 0;
-            }
+        //         column = 0;
+        //     }
 
-            field = null;
+        //     field = null;
 
-        Leave:
-            return field;
-        }
+        // Leave:
+        //     return field;
+        // }
 
-        private void incrementFieldIndices(ref int row, ref int column, int length)
-        {
-            row = (column == length - 1) ? row + 1 : row;
-            column = (column + 1) % length;
-        }
+        // private void incrementFieldIndices(ref int row, ref int column, int length)
+        // {
+        //     row = (column == length - 1) ? row + 1 : row;
+        //     column = (column + 1) % length;
+        // }
         
         #endregion Methods
     }
